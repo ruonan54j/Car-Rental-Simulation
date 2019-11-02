@@ -7,8 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 import ca.ubc.cs304.model.BranchModel;
+
+import ca.ubc.cs304.model.VehicleModel;
+
 
 /**
  * This class handles all database related transactions
@@ -39,6 +43,22 @@ public class DatabaseConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 	}
+
+
+	/* OUR ADDED CODE HERE */
+
+	/*
+	Returns a list of vehicles matching query parameters
+	*/
+	public VehicleModel[] getVehicles(String vtname, String location, String city, 
+			LocalDateTime start, LocalDateTime end){
+
+
+		return null;
+	}
+
+
+	/* OUR ADDED CODE ENDS HERE */
 
 	public void deleteBranch(int branchId) {
 		try {
