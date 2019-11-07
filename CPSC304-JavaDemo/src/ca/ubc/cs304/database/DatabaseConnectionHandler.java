@@ -56,9 +56,67 @@ public class DatabaseConnectionHandler {
 		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 
 		try {
-			//TODO: start, end must be queried from rental and reservation tables
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM vehicle WHERE vtname = ? AND location = ? AND city = ? AND start,end"); 
-			ps.setString(1, vtname);
+			// TODO: start, end must be queried from rental and reservation tables
+			// NOTE: currently, reservation table does not contain any connection to vehicle, only rental -> do we need to check reservation table then?
+			/*
+			PreparedStatement ps = connection.prepareStatement("SELECT v.* FROM vehicle v WHERE v.vtname = ? AND v.location = ? AND v.city = ? AND v.vid " + 
+												"AND v.vid NOT IN (SELECT v.* FROM vehicle v, rental rent, reservation res WHERE " +
+																	"rent.vid = v.vid AND rent.start >= ? AND rent.end <= ?" +
+																	"res.confNo = rent.confNo AND res.start >= ? AND res.end <= ?)"); */
+
+			String query = "SELECt v.* FROM vehicle v WHERE";
+			boolean andFlag = false;
+			if (vtname != null){
+				if (andFlag){
+					query += " AND v.vtname = ?";
+				}
+				else{
+					query += " v.vtname = ?";
+				}
+				andFlag = true;
+			}
+			if (location != null){
+				if (andFlag){
+					query += " AND v.location = ?";
+				}
+				else{
+					query += " v.location = ?";
+				}
+				andFlag = true;
+			}
+			if (city != null){
+				if (andFlag){
+					query += " AND v.city = ?";
+				}
+				else{
+					query += " v.city = ?";
+				}
+				andFlag = true;
+			}
+
+			if (start != null && end != null){
+				if (andFlag){
+					query += " AND v.vid NOT IN (SELECT v.* FROM vehicle v, rental rent, reservation res WHERE rent.vid = v.vid AND rent.start < ? AND rent.end > ?)";
+				}
+				else{
+					query += " v.vid NOT IN (SELECT v.* FROM vehicle v, rental rent, reservation res WHERE rent.vid = v.vid AND rent.start < ? AND rent.end > ?)";
+				}
+			}
+			PreparedStatement ps = connection.prepareStatement(query);
+
+			/*Need a way to insert optional queries, this needs testing */
+			int argInd = 1;
+			if (vtname != null)
+				ps.setString(argInd++, vtname);
+			if (location != null)
+				ps.setString(argInd++, location);
+			if (city != null)
+				ps.setString(argInd++, city);
+			if (start != null && end != null){
+				ps.setString(argInd++, end.toString());
+				ps.setString(argInd++, start.toString());
+			}
+
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
