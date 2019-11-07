@@ -53,8 +53,36 @@ public class DatabaseConnectionHandler {
 	public VehicleModel[] getVehicles(String vtname, String location, String city, 
 			LocalDateTime start, LocalDateTime end){
 
+		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 
-		return null;
+		try {
+			//TODO: start, end must be queried from rental and reservation tables
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM vehicle WHERE vtname = ? AND location = ? AND city = ? AND start,end"); 
+			ps.setString(1, vtname);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				VehicleModel model = new VehicleModel(rs.getString("vid"),
+													rs.getString("vlicense"),
+													rs.getString("make"),
+													rs.getInt("year"),
+													rs.getString("color"),
+													rs.getInt("odometer"),
+													rs.getInt("status"),
+													rs.getString("vtname"),
+													rs.getString("location"),
+													rs.getString("city"));
+				result.add(model);
+			}
+
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
+		return result.toArray(new VehicleModel[result.size()]);
 	}
 
 
@@ -65,7 +93,7 @@ public class DatabaseConnectionHandler {
 			PreparedStatement ps = connection.prepareStatement("DELETE FROM branch WHERE branch_id = ?");
 			ps.setInt(1, branchId);
 			
-			int rowCount = ps.executeUpdate();
+			int rowCount = ps.executeUpdate(); //ResultSet rs = stmt.executeQuery("SELECT * FROM branch");
 			if (rowCount == 0) {
 				System.out.println(WARNING_TAG + " Branch " + branchId + " does not exist!");
 			}
