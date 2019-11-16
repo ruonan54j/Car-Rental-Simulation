@@ -56,55 +56,39 @@ public class DatabaseConnectionHandler {
 		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 
 		try {
-			// TODO: start, end must be queried from rental and reservation tables
-			// NOTE: currently, reservation table does not contain any connection to vehicle, only rental -> do we need to check reservation table then?
-			/*
-			PreparedStatement ps = connection.prepareStatement("SELECT v.* FROM vehicle v WHERE v.vtname = ? AND v.location = ? AND v.city = ? AND v.vid " + 
-												"AND v.vid NOT IN (SELECT v.* FROM vehicle v, rental rent, reservation res WHERE " +
-																	"rent.vid = v.vid AND rent.start >= ? AND rent.end <= ?" +
-																	"res.confNo = rent.confNo AND res.start >= ? AND res.end <= ?)"); */
-
-			String query = "SELECt v.* FROM vehicle v WHERE";
+			String query = "SELECT v.* FROM vehicle v WHERE";
 			boolean andFlag = false;
 			if (vtname != null){
 				if (andFlag){
-					query += " AND v.vtname = ?";
+					query += " AND";
 				}
-				else{
-					query += " v.vtname = ?";
-				}
+				query += " v.vtname = ?";
 				andFlag = true;
 			}
 			if (location != null){
 				if (andFlag){
-					query += " AND v.location = ?";
+					query += " AND";
 				}
-				else{
-					query += " v.location = ?";
-				}
+				query += " v.location = ?";
 				andFlag = true;
 			}
 			if (city != null){
 				if (andFlag){
-					query += " AND v.city = ?";
+					query += " AND";
 				}
-				else{
-					query += " v.city = ?";
-				}
+				query += " v.city = ?";
 				andFlag = true;
 			}
 
 			if (start != null && end != null){
 				if (andFlag){
-					query += " AND v.vid NOT IN (SELECT v.* FROM vehicle v, rental rent, reservation res WHERE rent.vid = v.vid AND rent.start < ? AND rent.end > ?)";
+					query += " AND";
 				}
-				else{
-					query += " v.vid NOT IN (SELECT v.* FROM vehicle v, rental rent, reservation res WHERE rent.vid = v.vid AND rent.start < ? AND rent.end > ?)";
-				}
+				query += " NOT EXISTS (SELECT * FROM vehicle v2, rental r WHERE v2.vid = v.vid AND r.vid = v2.vid AND r.start < ? AND rent.end > ?)";
 			}
 			PreparedStatement ps = connection.prepareStatement(query);
 
-			/*Need a way to insert optional queries, this needs testing */
+			/* Insert queries dependent on which ones aren't null */
 			int argInd = 1;
 			if (vtname != null)
 				ps.setString(argInd++, vtname);
