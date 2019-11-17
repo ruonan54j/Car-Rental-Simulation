@@ -6,8 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import ca.ubc.cs304.model.BranchModel;
 
@@ -50,8 +51,7 @@ public class DatabaseConnectionHandler {
 	/*
 	Returns a list of vehicles matching query parameters
 	*/
-	public VehicleModel[] getVehicles(String vtname, String location, String city, 
-			LocalDateTime start, LocalDateTime end){
+	public VehicleModel[] getVehicles(String vtname, String location, Instant start, Instant end){
 
 		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 
@@ -72,15 +72,8 @@ public class DatabaseConnectionHandler {
 				query += " v.location = ?";
 				andFlag = true;
 			}
-			if (city != null){
-				if (andFlag){
-					query += " AND";
-				}
-				query += " v.city = ?";
-				andFlag = true;
-			}
 
-			if (start != null && end != null){
+			if (start != null && end != null){ //TODO: This doesn't consider if vehicle is rented but never returned (need to use rent.returndate as well)
 				if (andFlag){
 					query += " AND";
 				}
@@ -94,17 +87,15 @@ public class DatabaseConnectionHandler {
 				ps.setString(argInd++, vtname);
 			if (location != null)
 				ps.setString(argInd++, location);
-			if (city != null)
-				ps.setString(argInd++, city);
 			if (start != null && end != null){
-				ps.setString(argInd++, end.toString());
-				ps.setString(argInd++, start.toString());
+				ps.setTimestamp(argInd++, Timestamp.from(end));
+				ps.setTimestamp(argInd++, Timestamp.from(start));
 			}
 
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
-				VehicleModel model = new VehicleModel(rs.getString("vid"),
+				VehicleModel model = new VehicleModel(rs.getInt("vid"),
 													rs.getString("vlicense"),
 													rs.getString("make"),
 													rs.getInt("year"),
@@ -112,11 +103,9 @@ public class DatabaseConnectionHandler {
 													rs.getInt("odometer"),
 													rs.getInt("status"),
 													rs.getString("vtname"),
-													rs.getString("location"),
-													rs.getString("city"));
+													rs.getString("location"));
 				result.add(model);
 			}
-
 			rs.close();
 			ps.close();
 		} catch (SQLException e) {
@@ -127,6 +116,175 @@ public class DatabaseConnectionHandler {
 		return result.toArray(new VehicleModel[result.size()]);
 	}
 
+	/*
+	Creates a new customer account entry
+	*/
+	public boolean createCustomerAccount(String dlicense, String cellphone, String name, String address){
+
+		try {
+			String update = "INSERT INTO Customers VALUES (?,?,?,?)";
+
+			PreparedStatement ps = connection.prepareStatement(update);
+			ps.setString(1, dlicense);
+			ps.setString(2, cellphone);
+			ps.setString(3, name);
+			ps.setString(4, address);
+
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
+			return true;
+		} catch (SQLException e) { //Invalid query or duplicate dlicense
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+			return false;
+		}
+	}
+
+	/*
+	Creates a new reservation entry and return the confirmation id
+	Returns -1 if error occured
+	*/
+	public int createReservation(String vtname, String dlicense, Instant start, Instant end){
+
+		try {
+			String update = "INSERT INTO Reservations VALUES (?,?,?,?)";
+
+			PreparedStatement ps = connection.prepareStatement(update);
+			//Auto increment key should handle creating the confNo for us
+			ps.setString(1, vtname);
+			ps.setString(2, dlicense);
+			ps.setTimestamp(3, Timestamp.from(start));
+			ps.setTimestamp(4, Timestamp.from(end));
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ResultSet rs = ps.getGeneratedKeys();
+			ps.close();
+
+			if (rs.next()){
+				int confNo = rs.getInt(1); //Gets "key"
+				rs.close();
+				return confNo;
+			}
+			else{
+				rs.close();
+				return -1;
+			}
+		} catch (SQLException e) { //Invalid query OR invalid dlicense
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+			return -1;
+		}
+	}
+
+	public int createRentalNoRes(String location, String cardName, String cardNo, Instant expDate, String vtname, String dlicense, Instant start, Instant end){
+
+		int confNo = createReservation(vtname, dlicense, start, end);
+		if (confNo == -1){
+			return -1;
+		}
+		return createRentalWithRes(confNo, location, cardName, cardNo, expDate);
+	}
+
+	/*
+	Creates a new rental entry (requires a reservation beforehand)
+	*/
+	public int createRentalWithRes(int confNo, String location, String cardName, String cardNo, Instant expDate){
+
+		try {
+			// Confirm that reservation exists
+			String query = "SELECT * FROM Reservations WHERE confNo = ?";
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, confNo);
+			ResultSet rs = ps.executeQuery();
+			String vtname;
+			String dlicense;
+			Instant start;
+			Instant end;
+			if (rs.next()){ //Reservation info
+				vtname = rs.getString(2);
+				dlicense = rs.getString(3);
+				start = rs.getTimestamp(4).toInstant();
+				end = rs.getTimestamp(5).toInstant();
+			}
+			else{ //Res does not exist
+				return -1;
+			}
+			ps.close();
+
+			//Find a suitable vehicle
+
+			VehicleModel[] matches = getVehicles(vtname, location, start, end);
+			int vid;
+			int odometer;
+			if (matches.length > 0){
+				vid = matches[0].getVid();
+				odometer = matches[0].getOdometer();
+			}
+			else{ // No vehicles available for rental
+				return -1;
+			}
+
+			String update = "INSERT INTO Rentals VALUES (?,?,?,?,?,?,?,?,?,NULL,NULL,NULL,NULL)";
+			//last 4 NULLs represent return info
+			
+			//need vid, dlicense, start, end, odometer, cardname, cardno, expdate, confno
+			ps = connection.prepareStatement(update);
+			ps.setInt(1, vid);
+			ps.setString(2, dlicense);
+			ps.setTimestamp(3, Timestamp.from(start));
+			ps.setTimestamp(4, Timestamp.from(end));
+			ps.setInt(5, odometer);
+			ps.setString(6, cardName);
+			ps.setString(7, cardNo);
+			ps.setTimestamp(8, Timestamp.from(expDate));
+			ps.setInt(9, confNo);
+
+			ps.executeUpdate();
+			connection.commit();
+
+			rs = ps.getGeneratedKeys();
+			ps.close();
+
+			if (rs.next()){
+				int rid = rs.getInt(1); //Gets rental id
+				rs.close();
+				return rid;
+			}
+			else{
+				rs.close();
+				return -1;
+			}
+		} catch (SQLException e) { //Invalid query
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+			return -1;
+		}
+	}
+
+	public int returnVehicle(String rid, Instant retTime, int odometer, boolean fulltank){
+		try {
+			String update = "UPDATE Rentals WHERE <rid>";
+
+			PreparedStatement ps = connection.prepareStatement(update);
+			ps.setString(1, dlicense);
+			ps.setString(2, cellphone);
+			ps.setString(3, name);
+			ps.setString(4, address);
+
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
+			return true;
+		} catch (SQLException e) { //Invalid query or duplicate dlicense
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+			return false;
+		}
+		
+	}
 
 	/* OUR ADDED CODE ENDS HERE */
 

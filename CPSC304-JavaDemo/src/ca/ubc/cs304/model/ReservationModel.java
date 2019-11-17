@@ -1,6 +1,6 @@
 package ca.ubc.cs304.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * Model for a Reservation Object
@@ -9,10 +9,10 @@ public class ReservationModel {
     private final int confNo;
     private final String vtname;
     private final String dlicense;
-    private final LocalDateTime start;
-    private final LocalDateTime end;
+    private final Instant start;
+    private final Instant end;
 
-    public ReservationModel(int confNo, String vtname, String dlicense, LocalDateTime start, LocalDateTime end) {
+    public ReservationModel(int confNo, String vtname, String dlicense, Instant start, Instant end) {
         this.confNo = confNo;
         this.vtname = vtname;
         this.dlicense = dlicense;
@@ -20,11 +20,11 @@ public class ReservationModel {
         this.end = end;
     }
 
-    public LocalDateTime getEnd() {
+    public Instant getEnd() {
         return end;
     }
 
-    public LocalDateTime getStart() {
+    public Instant getStart() {
         return start;
     }
 

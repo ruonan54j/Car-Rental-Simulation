@@ -5,11 +5,11 @@ package ca.ubc.cs304.model;
  */
 public class CustomerModel {
 	private final String dlicense;
-	private final int cellphone;
+	private final String cellphone;
 	private final String name;
 	private final String address;	
 	
-	public CustomerModel(String dlicense, int cellphone, String name, String address) {
+	public CustomerModel(String dlicense, String cellphone, String name, String address) {
         this.dlicense = dlicense;
         this.cellphone = cellphone;
 		this.name = name;
@@ -20,7 +20,7 @@ public class CustomerModel {
 		return dlicense;
 	}
 
-	public int getCellphone() {
+	public String getCellphone() {
 		return cellphone;
 	}
 

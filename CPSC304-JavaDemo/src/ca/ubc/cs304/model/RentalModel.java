@@ -1,24 +1,32 @@
 package ca.ubc.cs304.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
- * Model for a Reservation Object
+ * Model for a Rental object
  */
 public class RentalModel {
     private final String rid;
     private final String vid;
     private final String dlicense;
-    private final LocalDateTime start;
-    private final LocalDateTime end;
+    private final Instant start;
+    private final Instant end;
     private final int odometer;
     private final String cardName;
-    private final int cardNo;
-    private final LocalDateTime expDate;
+    private final Instant expDate; //For credit card?
+    private final String cardNo;
     private final int confNo;
 
-    public RentalModel(String rid, String vid, String dlicense, LocalDateTime start, LocalDateTime end, int odometer,
-            String cardName, int cardNo, LocalDateTime expDate, int confNo) {
+    //Fields for defining "return"
+    /*
+    private final Instant returnDate;
+    private final int returnOdometer;
+    private final boolean fulltank;
+    private final int value; //idk what this is for
+    */
+
+    public RentalModel(String rid, String vid, String dlicense, Instant start, Instant end, int odometer,
+            String cardName, String cardNo, Instant expDate, int confNo) {
         this.rid = rid;
         this.vid = vid;
         this.dlicense = dlicense;
@@ -35,11 +43,11 @@ public class RentalModel {
         return confNo;
     }
 
-    public LocalDateTime getExpDate() {
+    public Instant getExpDate() {
         return expDate;
     }
 
-    public int getCardNo() {
+    public String getCardNo() {
         return cardNo;
     }
 
@@ -51,11 +59,11 @@ public class RentalModel {
         return odometer;
     }
 
-    public LocalDateTime getEnd() {
+    public Instant getEnd() {
         return end;
     }
 
-    public LocalDateTime getStart() {
+    public Instant getStart() {
         return start;
     }
 
