@@ -22,7 +22,7 @@ public class RentalModel {
     private final Instant returnDate;
     private final int returnOdometer;
     private final boolean fulltank;
-    private final int value; //idk what this is for
+    private final int finalcost; 
     */
 
     public RentalModel(String rid, String vid, String dlicense, Instant start, Instant end, int odometer,

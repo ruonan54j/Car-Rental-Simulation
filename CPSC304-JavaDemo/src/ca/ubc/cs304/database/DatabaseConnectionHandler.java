@@ -77,7 +77,8 @@ public class DatabaseConnectionHandler {
 				if (andFlag){
 					query += " AND";
 				}
-				query += " NOT EXISTS (SELECT * FROM vehicle v2, rental r WHERE v2.vid = v.vid AND r.vid = v2.vid AND r.start < ? AND rent.end > ?)";
+				query += " NOT EXISTS (SELECT * FROM vehicle v2, rental r WHERE v2.vid = v.vid AND r.vid = v2.vid AND r.start < ? AND (r.end > ? OR r.returnDate = NULL))";
+				// we assume that returnDate must be in the past and r.start, r.end must be in the future
 			}
 			PreparedStatement ps = connection.prepareStatement(query);
 
@@ -264,24 +265,29 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public int returnVehicle(String rid, Instant retTime, int odometer, boolean fulltank){
+	/*
+	Peforms a vehicle return.
+	Returns a "receipt" of the cost breakdown
+	*/
+	public int returnVehicle(int rid, Instant retTime, int odometer, boolean fullTank){
 		try {
-			String update = "UPDATE Rentals WHERE <rid>";
+			String update = "UPDATE Rentals SET retTime = ?, odometer = ?, fullTank = ?, finalCost = ? WHERE rid = ?";
 
 			PreparedStatement ps = connection.prepareStatement(update);
-			ps.setString(1, dlicense);
-			ps.setString(2, cellphone);
-			ps.setString(3, name);
-			ps.setString(4, address);
+			ps.setTimestamp(1, Timestamp.from(retTime));
+			ps.setInt(2, odometer);
+			ps.setBoolean(3, fullTank);
+			ps.setInt(4, 0); //TODO: Need a final cost calc
+			ps.setInt(5, rid);
 
 			ps.executeUpdate();
 			connection.commit();
 			ps.close();
-			return true;
+			return 1; //TODO: change to return a receipt object
 		} catch (SQLException e) { //Invalid query or duplicate dlicense
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
-			return false;
+			return -1;
 		}
 		
 	}
