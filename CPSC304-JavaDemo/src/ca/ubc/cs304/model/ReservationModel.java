@@ -7,33 +7,52 @@ import java.time.Instant;
  */
 public class ReservationModel {
     private final int confNo;
-    private final String vtname;
+    private final int vid;
     private final String dlicense;
-    private final Instant start;
-    private final Instant end;
+    private final Instant startTimestamp;
+    private final Instant endTimestamp;
+    private final String cardName;
+    private final String cardNo;
+    private final Instant expDate; // of card
 
-    public ReservationModel(int confNo, String vtname, String dlicense, Instant start, Instant end) {
+    public ReservationModel(int confNo, int vid, String dlicense, Instant startTimestamp, Instant endTimestamp,
+            String cardName, String cardNo, Instant expDate) {
         this.confNo = confNo;
-        this.vtname = vtname;
+        this.vid = vid;
         this.dlicense = dlicense;
-        this.start = start;
-        this.end = end;
+        this.startTimestamp = startTimestamp;
+        this.endTimestamp = endTimestamp;
+        this.cardName = cardName;
+        this.cardNo = cardNo;
+        this.expDate = expDate;
     }
 
-    public Instant getEnd() {
-        return end;
+    public Instant getExpDate() {
+        return expDate;
     }
 
-    public Instant getStart() {
-        return start;
+    public String getCardNo() {
+        return cardNo;
+    }
+
+    public String getCardName() {
+        return cardName;
+    }
+
+    public Instant getendTimestamp() {
+        return endTimestamp;
+    }
+
+    public Instant getstartTimestamp() {
+        return startTimestamp;
     }
 
     public String getDlicense() {
         return dlicense;
     }
 
-    public String getVtname() {
-        return vtname;
+    public int getVid() {
+        return vid;
     }
 
     public int getConfNo() {

@@ -2,6 +2,7 @@ package ca.ubc.cs304.model;
 
 /**
  * The intent for this class is to update/store information about a single branch
+ * Remove later, used in demo
  */
 public class BranchModel {
 	private final String address;

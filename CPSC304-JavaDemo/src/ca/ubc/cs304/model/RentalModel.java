@@ -6,37 +6,55 @@ import java.time.Instant;
  * Model for a Rental object
  */
 public class RentalModel {
+
+    // Fields for defining "rental"
     private final String rid;
-    private final String vid;
-    private final String dlicense;
-    private final Instant start;
-    private final Instant end;
-    private final int odometer;
-    private final String cardName;
-    private final Instant expDate; //For credit card?
-    private final String cardNo;
     private final int confNo;
+    private final double startOdometer;
+    private final String cardName;
+    private final Instant expDate; // For credit card?
+    private final String cardNo;
 
-    //Fields for defining "return"
-    /*
-    private final Instant returnDate;
-    private final int returnOdometer;
+    // Fields for defining "return"
+    private final Instant returnTimestamp; // If this field is null, vehicle has not been returned
+    private final double endOdometer;
     private final boolean fulltank;
-    private final int finalcost; 
-    */
+    private final double finalcost;
 
-    public RentalModel(String rid, String vid, String dlicense, Instant start, Instant end, int odometer,
-            String cardName, String cardNo, Instant expDate, int confNo) {
+    public RentalModel(String rid, int confNo, int startOdometer, String cardName,
+                Instant expDate, String cardNo, Instant returnTimestamp, int endOdometer,
+                boolean fulltank, double finalcost) {
         this.rid = rid;
-        this.vid = vid;
-        this.dlicense = dlicense;
-        this.start = start;
-        this.end = end;
-        this.odometer = odometer;
-        this.cardName = cardName;
-        this.cardNo = cardNo;
-        this.expDate = expDate;
         this.confNo = confNo;
+        this.startOdometer = startOdometer;
+        this.cardName = cardName;
+        this.expDate = expDate;
+        this.cardNo = cardNo;
+
+        this.returnTimestamp = returnTimestamp;
+        this.endOdometer = endOdometer;
+        this.fulltank = fulltank;
+        this.finalcost = finalcost;
+    }
+
+    public double getFinalcost() {
+        return finalcost;
+    }
+
+    public boolean isFulltank() {
+        return fulltank;
+    }
+
+    public double getEndOdometer() {
+        return endOdometer;
+    }
+
+    public Instant getReturnTimestamp() {
+        return returnTimestamp;
+    }
+
+    public double getStartOdometer() {
+        return startOdometer;
     }
 
     public int getConfNo() {
@@ -53,26 +71,6 @@ public class RentalModel {
 
     public String getCardName() {
         return cardName;
-    }
-
-    public int getOdometer() {
-        return odometer;
-    }
-
-    public Instant getEnd() {
-        return end;
-    }
-
-    public Instant getStart() {
-        return start;
-    }
-
-    public String getDlicense() {
-        return dlicense;
-    }
-
-    public String getVid() {
-        return vid;
     }
 
     public String getRid() {
