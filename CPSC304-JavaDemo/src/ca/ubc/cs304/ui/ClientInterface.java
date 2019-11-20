@@ -161,6 +161,10 @@ public class ClientInterface extends JFrame implements ActionListener {
 	public void viewDetails(ArrayList<VehicleModel> vlist,GridBagConstraints c, GridBagLayout gb ) {
 		
 		for(VehicleModel v : vlist){
+			JPanel rowPane = new JPanel();
+			rowPane.setLayout(new FlowLayout(FlowLayout.LEADING));
+			JPanel rowPane2 = new JPanel();
+			rowPane2.setLayout(new FlowLayout(FlowLayout.LEADING));
 			System.out.println(v.getColor());
 			JLabel makeL = new JLabel("make: "+v.getMake());
 			JLabel vlicenseL = new JLabel("license: "+v.getVlicense());
@@ -171,49 +175,17 @@ public class ClientInterface extends JFrame implements ActionListener {
 			JLabel vtnameL = new JLabel("type: "+v.getVtname());
 			JLabel locationL = new JLabel("location: "+v.getLocation());
 			
-			
-			
-			c.gridwidth = GridBagConstraints.RELATIVE;
-			c.insets = new Insets(0, 10, 10, 0);
-			gb.setConstraints(makeL, c);
-			contentPane.add(makeL);
-			gb.setConstraints(vlicenseL, c);
-			contentPane.add(vlicenseL);
-
-			c.gridwidth = GridBagConstraints.REMAINDER;
-			c.insets = new Insets(0, 0, 10, 10);
-			gb.setConstraints(vlicenseL, c);
-			contentPane.add(vlicenseL);
-
-			c.gridwidth = GridBagConstraints.RELATIVE;
-			c.insets = new Insets(0, 10, 10, 0);
-			gb.setConstraints(yearL, c);
-			contentPane.add(yearL);
-
-			c.gridwidth = GridBagConstraints.REMAINDER;
-			c.insets = new Insets(0, 0, 10, 10);
-			gb.setConstraints(colorL, c);
-			contentPane.add(colorL);
-
-			c.gridwidth = GridBagConstraints.RELATIVE;
-			c.insets = new Insets(0, 10, 10, 0);
-			gb.setConstraints(odometerL, c);
-			contentPane.add(odometerL);
-
-			c.gridwidth = GridBagConstraints.REMAINDER;
-			c.insets = new Insets(0, 0, 10, 10);
-			gb.setConstraints(statusL, c);
-			contentPane.add(statusL);
-
-			c.gridwidth = GridBagConstraints.RELATIVE;
-			c.insets = new Insets(0, 10, 10, 0);
-			gb.setConstraints(vtnameL, c);
-			contentPane.add(vtnameL);
-
-			c.gridwidth = GridBagConstraints.REMAINDER;
-			c.insets = new Insets(0, 0, 10, 10);
-			gb.setConstraints(locationL, c);
-			contentPane.add(locationL);
+		
+			rowPane.add(makeL);
+			rowPane.add(vlicenseL);
+			rowPane.add(yearL);
+			rowPane.add(colorL);
+			rowPane2.add(odometerL);
+			rowPane2.add(statusL);
+			rowPane2.add(vtnameL);
+			rowPane2.add(locationL);
+			contentPane.add(rowPane);
+			contentPane.add(rowPane2);
 		}
 		this.pack();
 
