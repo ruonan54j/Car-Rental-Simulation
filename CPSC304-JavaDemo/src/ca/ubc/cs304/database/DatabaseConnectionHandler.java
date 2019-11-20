@@ -56,7 +56,7 @@ public class DatabaseConnectionHandler {
 		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 
 		try {
-			String query = "SELECT v.* FROM vehicles v WHERE v.status = ?";
+			String query = "SELECT v.* FROM Vehicles v WHERE v.status = ?";
 			if (vtname != null){
 				query += " AND v.vtname = ?";
 			}
@@ -65,12 +65,12 @@ public class DatabaseConnectionHandler {
 			}
 
 			if (startTimestamp != null && endTimestamp != null){ 
-				query += " AND NOT EXISTS (SELECT * FROM vehicles v2, reservations res WHERE v2.vid = v.vid AND res.vid = v2.vid AND res.startTimestamp < ? AND res.endTimestamp > ?)";
+				query += " AND NOT EXISTS (SELECT * FROM Vehicles v2, reservations res WHERE v2.vid = v.vid AND res.vid = v2.vid AND res.startTimestamp < ? AND res.endTimestamp > ?)";
 				// we assume that returnDate must be in the past and r.start, r.end must be in the future
 			}
 			PreparedStatement ps = connection.prepareStatement(query);
 
-			query += " AND NOT EXISTS (SELECT * FROM vehicles v2, reservations res WHERE v2.vid = v.vid AND res.vid = v2.vid AND res.startTimestamp < ? AND res.endTimestamp > ?)";
+			query += " AND NOT EXISTS (SELECT * FROM Vehicles v2, reservations res WHERE v2.vid = v.vid AND res.vid = v2.vid AND res.startTimestamp < ? AND res.endTimestamp > ?)";
 
 			/* Insert queries dependent on which ones aren't null */
 			int argInd = 1;
