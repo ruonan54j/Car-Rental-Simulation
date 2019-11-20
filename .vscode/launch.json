@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - MaskFormatterDate",
+            "request": "launch",
+            "mainClass": "ca.ubc.cs304.controller.MaskFormatterDate",
+            "projectName": "CPSC304-JavaDemo"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MaskFormatterTest1",
+            "request": "launch",
+            "mainClass": "ca.ubc.cs304.controller.MaskFormatterTest1",
+            "projectName": "CPSC304-JavaDemo"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - SuperRent",
             "request": "launch",
             "mainClass": "ca.ubc.cs304.controller.SuperRent",

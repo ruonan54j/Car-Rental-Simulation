@@ -2,44 +2,45 @@ package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.LoginWindowDelegate;
-import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
-import ca.ubc.cs304.delegates.UserInterfaceDelegate;
-import ca.ubc.cs304.model.BranchModel;
-import ca.ubc.cs304.ui.UserInterface;
+import ca.ubc.cs304.delegates.ClientInterfaceDelegate;
+import ca.ubc.cs304.ui.ClientInterface;
 import ca.ubc.cs304.ui.LoginWindow;
-import ca.ubc.cs304.ui.TerminalTransactions;
-
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import ca.ubc.cs304.model.VehicleModel;
+import ca.ubc.cs304.model.ReturnReceipt;
 /**
  * This is the main controller class that will orchestrate everything.
  */
-public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate, UserInterfaceDelegate {
+public class SuperRent implements LoginWindowDelegate, ClientInterfaceDelegate {
 	private DatabaseConnectionHandler dbHandler = null;
 	private LoginWindow loginWindow = null;
-	private UserInterface userInterface = null;
-
+	private ClientInterface clientInterface = null;
+	// private ClerkInterface clerkInterface = null;
 	public SuperRent() {
 		dbHandler = new DatabaseConnectionHandler();
 	}
-	
+
 	private void start() {
-		loginWindow = new LoginWindow();
-		loginWindow.showFrame(this);
+		login("ora_rjia","a33550161");
 	}
-	
+
 	/**
 	 * LoginWindowDelegate Implementation
 	 * 
-     * connects to Oracle database with supplied username and password
-     */ 
+	 * connects to Oracle database with supplied username and password
+	 */
 	public void login(String username, String password) {
 		boolean didConnect = dbHandler.login(username, password);
 
 		if (didConnect) {
 			// Once connected, remove login window and start text transaction flow
-			loginWindow.dispose();
-			userInterface = new UserInterface();
-			userInterface.showFrame(this);
-			
+			clientInterface = new ClientInterface();
+			clientInterface.showFrame(this);
+
 		} else {
 			loginWindow.handleLoginFailed();
 
@@ -50,81 +51,48 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 			}
 		}
 	}
+
+	public void getVehicles(String type, String location, String startTime, String endTime) {
+		Date dateStart;
+		Date dateEnd;
+		VehicleModel[] vehicles;
+		try {
+			dateStart = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startTime);
+			dateEnd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(endTime);	
+			Instant startInstant = dateStart.toInstant();
+			Instant endInstant = dateEnd.toInstant();
+
+			
+
+			vehicles = dbHandler.getVehicles(type, location, startInstant, endInstant);
+			//System.out.println(vehicles[0]);
+		} catch (ParseException e) {
+		}
+		
+		//test
+		VehicleModel v = new VehicleModel(1, "123", "A", 1998, "blue",12.4, 1, "honda", "Vancouver");			
+		VehicleModel v2 = new VehicleModel(2, "122", "B", 1998, "red",123.4, 1, "toyota", "Vancouver");
+		ArrayList<VehicleModel> vlist  = new ArrayList<VehicleModel>();
+		vlist.add(v);
+		vlist.add(v2);
+		clientInterface.addVehicle(vlist, 1);
+		//end test
+		
+	}
 	
-	/**
-	 * TermainalTransactionsDelegate Implementation
-	 * 
-	 * Insert a branch with the given info
-	 */
-    public void insertBranch(BranchModel model) {
-    	dbHandler.insertBranch(model);
-    }
-
-    /**
-	 * TermainalTransactionsDelegate Implementation
-	 * 
-	 * Delete branch with given branch ID.
-	 */ 
-    public void deleteBranch(int branchId) {
-    	dbHandler.deleteBranch(branchId);
-    }
-    
-    /**
-	 * TermainalTransactionsDelegate Implementation
-	 * 
-	 * Update the branch name for a specific ID
-	 */
-
-    public void updateBranch(int branchId, String name) {
-    	dbHandler.updateBranch(branchId, name);
-    }
-
-    /**
-	 * TermainalTransactionsDelegate Implementation
-	 * 
-	 * Displays information about varies bank branches.
-	 */
-    public void showBranch() {
-    	BranchModel[] models = dbHandler.getBranchInfo();
-    	
-    	for (int i = 0; i < models.length; i++) {
-    		BranchModel model = models[i];
-    		
-    		// simplified output formatting; truncation may occur
-    		System.out.printf("%-10.10s", model.getId());
-    		System.out.printf("%-20.20s", model.getName());
-    		if (model.getAddress() == null) {
-    			System.out.printf("%-20.20s", " ");
-    		} else {
-    			System.out.printf("%-20.20s", model.getAddress());
-    		}
-    		System.out.printf("%-15.15s", model.getCity());
-    		if (model.getPhoneNumber() == 0) {
-    			System.out.printf("%-15.15s", " ");
-    		} else {
-    			System.out.printf("%-15.15s", model.getPhoneNumber());
-    		}
-    		
-    		System.out.println();
-    	}
-    }
+	public void makeReservation(String vtname, String location, String dlicense, String endTime,Instant startTimestamp, Instant endTimestamp, String cardName, String cardNo, Instant expDate) {
+		//try creating res
+		int success = 0;
+		success = dbHandler.createReservation(vtname, location, dlicense, startTimestamp, endTimestamp, cardName, cardNo, expDate);
+		if (success>0){
+			//call gui to display confirmation
+		} else{
+			//show error
+		}
+	}
 	
-    /**
-	 * TerminalTransactionsDelegate Implementation
-	 * 
-     * The TerminalTransaction instance tells us that it is done with what it's 
-     * doing so we are cleaning up the connection since it's no longer needed.
-     */ 
-    public void terminalTransactionsFinished() {
-    	dbHandler.close();
-    	dbHandler = null;
-    	
-    	System.exit(0);
-    }
-    
-	/**
-	 * Main method called at launch time
-	 */
+	
+	//main method
 	public static void main(String args[]) {
 		SuperRent superRent = new SuperRent();
 		superRent.start();
