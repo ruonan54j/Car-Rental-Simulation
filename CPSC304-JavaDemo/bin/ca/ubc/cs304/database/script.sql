@@ -3,7 +3,7 @@ CREATE TABLE `Customers` (
   `dlicense` varchar(20) NOT NULL,
   `cellphone` int(11) NOT NULL,
   `name` varchar(20) NOT NULL,
-  `address` varchar(50) NOT NULL,
+  `address` varchar(20) NOT NULL,
    PRIMARY KEY (`dlicense`)
 );
 
@@ -18,7 +18,7 @@ CREATE TABLE `Rentals` (
   `rid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2,
   `confNo` int(11) NOT NULL,
   `startOdometer` double NOT NULL,
-  `startTimestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `beginTimestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `returnTimestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `endOdometer` double NOT NULL,
   `fullTank` tinyint(1) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `Rentals` (
 -- Dumping data for table `Rentals`
 
 
-INSERT INTO `Rentals` (`rid`, `confNo`, `startOdometer`, `startTimestamp`, `returnTimestamp`, `endOdometer`, `fullTank`, `finalCost`) VALUES
+INSERT INTO `Rentals` (`rid`, `confNo`, `startOdometer`, `beginTimestamp`, `returnTimestamp`, `endOdometer`, `fullTank`, `finalCost`) VALUES
 (1, 123, 12.4, '2019-11-21 02:37:58', '0000-00-00 00:00:00', 12.4, 1, 50.4);
 
 -- Table structure for table `Reservations`
@@ -40,11 +40,11 @@ CREATE TABLE `Reservations` (
   `confNo` int(11) NOT NULL,
   `vid` int(11) NOT NULL,
   `dlicense` varchar(20) NOT NULL,
-  `startTimestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `startTimestamp` timestamp NOT NULL  DEFAULT '0000-00-00 00:00:00',
   `endTimestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `cardName` varchar(20) NOT NULL,
-  `cardNo` int(11) NOT NULL,
-  `expDate` date NOT NULL,
+  `cardNo` varchar(20) NOT NULL,
+  `expDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`confNo`),
   FOREIGN KEY (`dlicense`),
   FOREIGN KEY (`vid`);
@@ -54,7 +54,7 @@ CREATE TABLE `Reservations` (
 
 
 INSERT INTO `Reservations` (`confNo`, `vid`, `dlicense`, `startTimestamp`, `endTimestamp`, `cardName`, `cardNo`, `expDate`) VALUES
-(123, 1, '123bbb', '2019-11-21 02:34:47', '0000-00-00 00:00:00', 'mastercard', 123, '2019-11-21');
+(123, 1, '123bbb', '2019-11-21 02:34:47', '0000-00-00 00:00:00', 'mastercard', '123', '2019-11-21');
 
 
 -- Table structure for table `Vehicles`
@@ -68,9 +68,9 @@ CREATE TABLE `Vehicles` (
   `year` int(11) NOT NULL,
   `color` varchar(20) NOT NULL,
   `odometer` double NOT NULL,
-  `status` int(11) NOT NULL,
+  `status` varchar(20) NOT NULL,
   `vtname` varchar(20) NOT NULL,
-  `location` varchar(50) NOT NULL,
+  `location` varchar(20) NOT NULL,
   PRIMARY KEY (`vid`),
   FOREIGN KEY (`vtname`);
 );
@@ -79,7 +79,7 @@ CREATE TABLE `Vehicles` (
 
 
 INSERT INTO `Vehicles` (`vid`, `vlicense`, `make`, `model`, `year`, `color`, `odometer`, `status`, `vtname`, `location`) VALUES
-(1, '123abc', 'Honda', 'Civic', 2010, 'blue', 100.5, 1, 'Electrical Vehicle', 'Vancouver');
+(1, '123abc', 'Honda', 'Civic', 2010, 'blue', 100.5, "available", 'Electrical Vehicle', 'Vancouver');
 
 -- Table structure for table `VehicleTypes`
 
