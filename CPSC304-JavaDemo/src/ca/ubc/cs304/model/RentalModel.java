@@ -8,12 +8,11 @@ import java.time.Instant;
 public class RentalModel {
 
     // Fields for defining "rental"
-    private final String rid;
+    private final int rid;
+    private final int vid;
     private final int confNo;
     private final double startOdometer;
-    private final String cardName;
-    private final Instant expDate; // For credit card?
-    private final String cardNo;
+    private final Instant beginTimestamp;
 
     // Fields for defining "return"
     private final Instant returnTimestamp; // If this field is null, vehicle has not been returned
@@ -21,20 +20,26 @@ public class RentalModel {
     private final boolean fulltank;
     private final double finalcost;
 
-    public RentalModel(String rid, int confNo, int startOdometer, String cardName,
-                Instant expDate, String cardNo, Instant returnTimestamp, int endOdometer,
-                boolean fulltank, double finalcost) {
+    public RentalModel(int rid, int vid, int confNo, int startOdometer, Instant beginTimestamp, Instant returnTimestamp,
+            int endOdometer, boolean fulltank, double finalcost) {
         this.rid = rid;
+        this.vid = vid;
         this.confNo = confNo;
         this.startOdometer = startOdometer;
-        this.cardName = cardName;
-        this.expDate = expDate;
-        this.cardNo = cardNo;
+        this.beginTimestamp = beginTimestamp;
 
         this.returnTimestamp = returnTimestamp;
         this.endOdometer = endOdometer;
         this.fulltank = fulltank;
         this.finalcost = finalcost;
+    }
+
+    public int getVid() {
+        return vid;
+    }
+
+    public Instant getBeginTimestamp() {
+        return beginTimestamp;
     }
 
     public double getFinalcost() {
@@ -61,19 +66,7 @@ public class RentalModel {
         return confNo;
     }
 
-    public Instant getExpDate() {
-        return expDate;
-    }
-
-    public String getCardNo() {
-        return cardNo;
-    }
-
-    public String getCardName() {
-        return cardName;
-    }
-
-    public String getRid() {
+    public int getRid() {
         return rid;
     }
 }
