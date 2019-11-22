@@ -1,5 +1,7 @@
 package ca.ubc.cs304.database;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.time.Instant;
 import java.time.Duration;
-
+import java.util.*;
 import ca.ubc.cs304.model.BranchModel;
 import ca.ubc.cs304.model.VehicleModel;
 import ca.ubc.cs304.model.ReturnReceipt;
@@ -30,6 +32,7 @@ public class DatabaseConnectionHandler {
 			// Load the Oracle JDBC driver
 			// Note that the path could change for new drivers
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+			
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
@@ -460,6 +463,8 @@ public class DatabaseConnectionHandler {
 			connection.setAutoCommit(false);
 	
 			System.out.println("\nConnected to Oracle!");
+			File file=new File("/Users/ruonanjia/Desktop/school/304/CPSC304Project/CPSC304-JavaDemo/src/script.sql");
+			executeSqlScript(file);
 			return true;
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
@@ -473,5 +478,51 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
+	}
+
+	public void executeSqlScript(File inputFile) {
+
+		// Delimiter
+		String delimiter = ";";
+	
+		// Create scanner
+		Scanner scanner;
+		try {
+			scanner = new Scanner(inputFile).useDelimiter(delimiter);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+			return;
+		}
+	
+		// Loop through the SQL file statements 
+		Statement currentStatement = null;
+		while(scanner.hasNext()) {
+	
+			// Get statement 
+			String rawStatement = scanner.next();
+			if(rawStatement.trim().length() > 0){
+			try {
+				// Execute statement
+				currentStatement = connection.createStatement();
+				currentStatement.execute(rawStatement.trim());
+				System.out.println("executed");
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("err1");
+			} finally {
+				// Release resourcesß
+				if (currentStatement != null) {
+					try {
+						currentStatement.close();
+					} catch (SQLException e) {
+						//e.printStackTrace();
+						System.out.println("err2");
+					}
+				}
+				currentStatement = null;
+			}
+		}
+	}
+	scanner.close();
 	}
 }
