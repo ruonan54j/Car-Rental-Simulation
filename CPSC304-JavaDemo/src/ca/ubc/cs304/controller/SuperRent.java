@@ -11,6 +11,7 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import ca.ubc.cs304.model.VehicleModel;
+import ca.ubc.cs304.model.ReservationReceipt;
 import ca.ubc.cs304.model.ReturnReceipt;
 /**
  * This is the main controller class that will orchestrate everything.
@@ -68,8 +69,8 @@ public class SuperRent implements LoginWindowDelegate, ClientInterfaceDelegate {
 		}
 		
 		//test
-		VehicleModel v = new VehicleModel(1, "123", "A", 1998, "blue",12.4, 1, "honda", "Vancouver");			
-		VehicleModel v2 = new VehicleModel(2, "122", "B", 1998, "red",123.4, 1, "toyota", "Vancouver");
+		VehicleModel v = new VehicleModel(1, "123", "A", 1998, "blue",12.4, "Available", "honda", "Vancouver");			
+		VehicleModel v2 = new VehicleModel(2, "122", "B", 1998, "red",123.4, "Available", "toyota", "Vancouver");
 		ArrayList<VehicleModel> vlist  = new ArrayList<VehicleModel>();
 		vlist.add(v);
 		vlist.add(v2);
@@ -80,9 +81,8 @@ public class SuperRent implements LoginWindowDelegate, ClientInterfaceDelegate {
 	
 	public void makeReservation(String vtname, String location, String dlicense, String endTime,Instant startTimestamp, Instant endTimestamp, String cardName, String cardNo, Instant expDate) {
 		//try creating res
-		int success = 0;
-		success = dbHandler.createReservation(vtname, location, dlicense, startTimestamp, endTimestamp, cardName, cardNo, expDate);
-		if (success>0){
+		ReservationReceipt receipt = dbHandler.createReservation(vtname, location, dlicense, startTimestamp, endTimestamp, cardName, cardNo, expDate);
+		if (receipt != null){
 			//call gui to display confirmation
 		} else{
 			//show error

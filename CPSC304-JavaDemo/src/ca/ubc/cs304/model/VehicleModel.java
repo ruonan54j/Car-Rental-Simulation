@@ -9,12 +9,12 @@ public class VehicleModel {
     private final String make;
     private final int year;
     private final String color;
-    private final double odometer; // Assume in km?
-    private final int status; // Change to boolean or use enum?
+    private final double odometer; // Assume in km
+    private final String status;
     private final String vtname;
     private final String location;
 
-    public VehicleModel(int vid, String vlicense, String make, int year, String color, double odometer, int status,
+    public VehicleModel(int vid, String vlicense, String make, int year, String color, double odometer, String status,
             String vtname, String location) {
         this.vid = vid;
         this.vlicense = vlicense;
@@ -35,7 +35,7 @@ public class VehicleModel {
         return vtname;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
