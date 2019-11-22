@@ -56,7 +56,6 @@ create table Rentals(
   finalCost number(6,0),
  foreign key(confNo) references Reservations(confNo));
 
- 
 insert into Customers values ('1234567','1234527','kris','123 street NW');
 insert into Customers values ('2224577','1234567','bob','13 street W');
 insert into Customers values ('1233377','1233337','fay','12 Ave NW');
