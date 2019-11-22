@@ -81,12 +81,17 @@ public class ClientInterface extends JFrame implements ActionListener {
         rowPane4.add(dateLabelEnd);
 		rowPane4.add(formatDateEnd);
 		
+		
+		JPanel rowPane5 = new JPanel();
+		rowPane5.add(searchButton);
+		rowPane5.setLayout(new FlowLayout(FlowLayout.CENTER));
+
 		contentPane.add(rowPane1);
 		contentPane.add(rowPane2);
 		contentPane.add(rowPane3);
 		contentPane.add(rowPane4);
-
-		contentPane.add(searchButton);
+		contentPane.add(rowPane5);
+        
 		// set Box Layout 
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 
@@ -126,18 +131,11 @@ public class ClientInterface extends JFrame implements ActionListener {
 		 });
 
 		// place interval label
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		c.insets = new Insets(0, 10, 10, 0);
-		gb.setConstraints(countL, c);
-		contentPane.add(countL);
-		
-
-		// place the start field 
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.insets = new Insets(0, 0, 10, 10);
-		gb.setConstraints(moreButton, c);
-		contentPane.add(moreButton);
-
+		JPanel row = new JPanel();
+		row.add(countL);
+		row.add(moreButton);
+		row.setLayout(new FlowLayout(FlowLayout.CENTER));
+		contentPane.add(row);
 
 		this.pack();
 
@@ -180,7 +178,7 @@ public class ClientInterface extends JFrame implements ActionListener {
 			rowPane.add(vlicenseL);
 			rowPane.add(yearL);
 			rowPane.add(colorL);
-			rowPane2.add(odometerL);
+			rowPane.add(odometerL);
 			rowPane2.add(statusL);
 			rowPane2.add(vtnameL);
 			rowPane2.add(locationL);
