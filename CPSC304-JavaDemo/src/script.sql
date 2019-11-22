@@ -56,8 +56,6 @@ create table Rentals(
   finalCost number(6,0),
  foreign key(confNo) references Reservations(confNo));
 
-insert into Customers values ('1234567','1234527','kris','123 street NW');
-insert into Customers values ('2224577','1234567','bob','13 street W');
 insert into Customers values ('1233377','1233337','fay','12 Ave NW');
 insert into Customers values ('1244466','1231117','hed','123 A street NW');
 insert into Customers values ('1235557','1233367','sony','12 B street NW');
@@ -73,4 +71,3 @@ insert into VehicleTypes values ('cruiser','fast',52.54,20.00, 75.00);
 insert into VehicleTypes values ('truck','big',58.00,22.00, 70.00);
 insert into VehicleTypes values ('hybrid','yaay',56.44,20.50, 60.00);
 
-insert into Vehicles values (1,'12abc','toyota','ranger', 2010,'blue',12.94,'booked','electric','vancouver');
