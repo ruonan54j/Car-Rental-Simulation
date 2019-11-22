@@ -63,8 +63,6 @@ public class SuperRent implements LoginWindowDelegate, ClientInterfaceDelegate {
 			Instant startInstant = dateStart.toInstant();
 			Instant endInstant = dateEnd.toInstant();
 
-			
-
 			vehicles = dbHandler.getVehicles(type, location, startInstant, endInstant);
 			//System.out.println(vehicles[0]);
 		} catch (ParseException e) {
