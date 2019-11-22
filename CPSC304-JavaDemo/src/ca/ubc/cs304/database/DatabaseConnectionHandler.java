@@ -703,7 +703,7 @@ public class DatabaseConnectionHandler {
 				currentStatement = connection.createStatement();
 				currentStatement.execute(rawStatement.trim());
 				System.out.println("executed");
-				//commit inserts
+				//commit in
 				if(rawStatement.contains("insert")){
 					connection.commit();
 				}

@@ -15,15 +15,15 @@ create table VehicleTypes(
 
 create table Vehicles(
   vid integer primary key,
-  vlicense varchar2(20) not null,
-  make varchar2(20) not null,
-  model varchar2(20) not null,
+  vlicense varchar2(10) not null,
+  make varchar2(10) not null,
+  model varchar2(10) not null,
   year integer not null,
-  color varchar2(20) not null,
-  odometer number(10,2) not null,                        
-  status varchar2(20) not null,
-  vtname varchar2(20) not null,
-  location varchar2(20) not null,
+  color varchar2(10) not null,
+  odometer number(5,2) not null,                        
+  status varchar2(10) not null,
+  vtname varchar2(10) not null,
+  location varchar2(10) not null,
   foreign key (vtname) references VehicleTypes(vtname));
 
 create table Customers(
@@ -70,4 +70,13 @@ insert into VehicleTypes values ('van','not fun',55.44,25.00, 50.00);
 insert into VehicleTypes values ('cruiser','fast',52.54,20.00, 75.00);
 insert into VehicleTypes values ('truck','big',58.00,22.00, 70.00);
 insert into VehicleTypes values ('hybrid','yaay',56.44,20.50, 60.00);
+insert into VehicleTypes values ('typeTest','test',38.00,23.00, 73.00);
+insert into VehicleTypes values ('typeTest2','loud',16.44,10.50, 65.00);
 
+
+insert into Vehicles values (1,'plate1','make1','m1',12,'blue',12.23,'b','electric','vancouver');
+insert into Vehicles values (2,'plate2','make2','m2',02,'red',12.23,'f','truck','vancouver');
+insert into Vehicles values (3,'plate3','make1','m2',02,'red',12.23,'f','truck','vancouver');
+insert into Vehicles values (4,'plate4','make1','m3',12,'blue',12.23,'b','electric','vancouver');
+insert into Vehicles values (5,'plate5','make2','m5',02,'red',12.23,'f','truck','vancouver');
+insert into Vehicles values (6,'plate6','make1','m2',02,'red',12.23,'f','truck','vancouver');
