@@ -2,6 +2,7 @@ package ca.ubc.cs304.database;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -91,6 +92,7 @@ public class DatabaseConnectionHandler {
 				ps.setTimestamp(argInd++, Timestamp.from(startTimestamp));
 			}
 
+			System.out.println("EXECUTING QUERY");
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
@@ -660,8 +662,14 @@ public class DatabaseConnectionHandler {
 			connection.setAutoCommit(false);
 	
 			System.out.println("\nConnected to Oracle!");
-			File file=new File("/Users/ruonanjia/Desktop/school/304/CPSC304Project/CPSC304-JavaDemo/src/script.sql");
-			executeSqlScript(file);
+			//File file=new File("/Users/ruonanjia/Desktop/school/304/CPSC304Project/CPSC304-JavaDemo/src/script.sql");
+			URL path = ClassLoader.getSystemResource("script.sql");
+			try{
+				File file = new File(path.toURI());
+				executeSqlScript(file);
+			}catch(Exception e){
+				return false;
+			}
 			return true;
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
