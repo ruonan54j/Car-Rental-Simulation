@@ -117,7 +117,7 @@ public class ClientInterface extends JFrame implements ActionListener {
 		carType.requestFocus();
 	}
 
-	public void addVehicle(ArrayList<VehicleModel> vlist, int count){
+	public void addVehicle(VehicleModel[] vArr, int count){
 		// layout components using the GridBag layout manager
 		GridBagLayout gb = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
@@ -126,7 +126,7 @@ public class ClientInterface extends JFrame implements ActionListener {
 		// register search button with action event handler
 		moreButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				 viewDetails(vlist,c,gb);
+				 viewDetails(vArr,c,gb);
 			}
 		 });
 
@@ -156,7 +156,7 @@ public class ClientInterface extends JFrame implements ActionListener {
 	}
 
 	//show details of car
-	public void viewDetails(ArrayList<VehicleModel> vlist,GridBagConstraints c, GridBagLayout gb ) {
+	public void viewDetails(VehicleModel[] vlist,GridBagConstraints c, GridBagLayout gb ) {
 		
 		for(VehicleModel v : vlist){
 			JPanel rowPane = new JPanel();
