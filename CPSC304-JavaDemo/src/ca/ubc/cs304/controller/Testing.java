@@ -46,6 +46,7 @@ public class Testing implements LoginWindowDelegate {
         String location = null;
         Instant startTimestamp = null;
         Instant endTimestamp = null;
-        VehicleModel[] vehicles = t.dbHandler.getVehicles(vtname, location, startTimestamp, endTimestamp);
+		VehicleModel[] vehicles = t.dbHandler.getVehicles(vtname, location, startTimestamp, endTimestamp);
+		System.out.println(vehicles.length);
 	}
 }
