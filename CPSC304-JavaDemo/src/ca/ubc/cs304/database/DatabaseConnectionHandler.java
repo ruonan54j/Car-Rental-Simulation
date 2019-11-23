@@ -38,7 +38,7 @@ public class DatabaseConnectionHandler {
 			// Load the Oracle JDBC driver
 			// Note that the path could change for new drivers
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-			
+						
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
@@ -65,7 +65,7 @@ public class DatabaseConnectionHandler {
 		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 
 		try {
-			String query = "SELECT v.* FROM Vehicles v WHERE v.status = ?";
+			String query = "SELECT v.* FROM Vehicles v WHERE v.status LIKE ?";
 			if (vtname != null){
 				query += " AND v.vtname = ?";
 			}
@@ -82,7 +82,7 @@ public class DatabaseConnectionHandler {
 
 			/* Insert queries dependent on which ones aren't null */
 			int argInd = 1;
-			ps.setString(argInd++, "Available");
+			ps.setString(argInd++, "%");
 			if (vtname != null)
 				ps.setString(argInd++, vtname);
 			if (location != null)
