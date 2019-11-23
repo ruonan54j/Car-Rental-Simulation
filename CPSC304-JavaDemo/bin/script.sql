@@ -74,9 +74,9 @@ insert into VehicleTypes values ('typeTest','test',38.00,23.00, 73.00);
 insert into VehicleTypes values ('typeTest2','loud',16.44,10.50, 65.00);
 
 
-insert into Vehicles values (1,'plate1','make1','m1',12,'blue',12.23,'Available','electric','vancouver');
-insert into Vehicles values (2,'plate2','make2','m2',02,'red',12.23,'Available','truck','vancouver');
-insert into Vehicles values (3,'plate3','make1','m2',02,'red',12.23,'Available','truck','vancouver');
-insert into Vehicles values (4,'plate4','make1','m3',12,'blue',12.23,'Available','electric','vancouver');
-insert into Vehicles values (5,'plate5','make2','m5',02,'red',12.23,'Available','truck','vancouver');
-insert into Vehicles values (6,'plate6','make1','m2',02,'red',12.23,'Available','truck','vancouver');
+insert into Vehicles values (1,'plate1','make1','m1',12,'blue',12.23,'b','electric','vancouver');
+insert into Vehicles values (2,'plate2','make2','m2',02,'red',12.23,'f','truck','vancouver');
+insert into Vehicles values (3,'plate3','make1','m2',02,'red',12.23,'f','truck','vancouver');
+insert into Vehicles values (4,'plate4','make1','m3',12,'blue',12.23,'b','electric','vancouver');
+insert into Vehicles values (5,'plate5','make2','m5',02,'red',12.23,'f','truck','vancouver');
+insert into Vehicles values (6,'plate6','make1','m2',02,'red',12.23,'f','truck','vancouver');
