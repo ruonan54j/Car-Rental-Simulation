@@ -13,7 +13,7 @@ public class ReturnReceipt {
     private final double hourlyTotal;
     private final double kiloRate;
     private final double kilosOverAllowed;
-    private final double distTotal;
+    private final double distTotal; //Cost from distance travelled
     private final double gasTotal;
     private final double finalTotal;
 
