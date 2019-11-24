@@ -87,7 +87,8 @@ public class GenericInterface extends JFrame{
 
 
 	public void openChoice(int id){
-        delegate.openChoice(id);
+		delegate.openChoice(id);
+		this.setVisible(false);
 	}
 	
 	
