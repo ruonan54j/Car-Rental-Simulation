@@ -21,12 +21,12 @@ import java.time.Instant;
 import java.util.Date;
 
 /**
- * The class is only responsible for displaying and handling the login GUI. 
+ * The class is only responsible for displaying and handling the GUI. 
  */
 public class ClientInterface extends JFrame implements ActionListener {
 
 	private static final int TEXT_FIELD_WIDTH = 10;
-	// components of the login window
+	// components of the window
 	private JTextField carType;
 	private JTextField location;
 	private JFormattedTextField formatDateStart;
@@ -180,7 +180,8 @@ public class ClientInterface extends JFrame implements ActionListener {
 		homeButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				contentPane.removeAll();
-				showFrame(delegate);
+				dispose();
+				delegate.home();
 			}
 		 });
 
@@ -198,7 +199,8 @@ public class ClientInterface extends JFrame implements ActionListener {
 		homeButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				contentPane.removeAll();
-				showFrame(delegate);
+				dispose();
+				delegate.home();
 			}
 		 });
 		for(VehicleModel v : vlist){
@@ -244,7 +246,8 @@ public class ClientInterface extends JFrame implements ActionListener {
 					homeButton.addActionListener(new ActionListener(){
 						public void actionPerformed(ActionEvent e){
 							contentPane.removeAll();
-							showFrame(delegate);
+							dispose();
+							delegate.home();
 						}
 					});
 					showAccount(v);
@@ -412,10 +415,12 @@ public class ClientInterface extends JFrame implements ActionListener {
 		rowPane0.setLayout(new FlowLayout(FlowLayout.CENTER));
 		rowPane0.add(homeButton);
 		contentPane.add(rowPane0);
+	    
 		homeButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				contentPane.removeAll();
-				showFrame(delegate);
+				dispose();
+				delegate.home();
 			}
 		 });
 		JLabel confno = new JLabel("confirmation number: "+receipt.getConfNo());
