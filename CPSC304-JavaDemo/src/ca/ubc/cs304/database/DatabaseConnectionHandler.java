@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.time.Duration;
 import java.util.*;
 import ca.ubc.cs304.model.BranchModel;
+import ca.ubc.cs304.model.CustomerModel;
 import ca.ubc.cs304.model.RentalModel;
 import ca.ubc.cs304.model.RentalReceipt;
 import ca.ubc.cs304.model.ReservationModel;
@@ -64,7 +65,7 @@ public class DatabaseConnectionHandler {
 	public VehicleModel[] getVehicles(String vtname, String location, Instant startTimestamp, Instant endTimestamp){
 
 		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
-
+		Boolean first = true;
 		try {
 			String query = "SELECT v.* FROM Vehicles v WHERE v.status LIKE ?";
 			if (vtname != null){
@@ -84,6 +85,7 @@ public class DatabaseConnectionHandler {
 			/* Insert queries dependent on which ones aren't null */
 			int argInd = 1;
 			ps.setString(argInd++, "%");
+
 			if (vtname != null)
 				ps.setString(argInd++, vtname);
 			if (location != null)
@@ -142,7 +144,6 @@ public class DatabaseConnectionHandler {
 			return false;
 		}
 	}
-
 	/*
 	Creates a new reservation entry and return the confirmation id
 	Returns null if no vehicles could be found in the specified location and time frame

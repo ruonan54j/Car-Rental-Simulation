@@ -14,6 +14,7 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import ca.ubc.cs304.model.VehicleModel;
+import ca.ubc.cs304.model.CustomerModel;
 import ca.ubc.cs304.model.ReservationReceipt;
 import ca.ubc.cs304.model.ReturnReceipt;
 /**
@@ -91,11 +92,15 @@ public class SuperRent implements LoginWindowDelegate, ClientInterfaceDelegate,G
 		} catch (ParseException e) {
 		
 		}
-		vehicles = dbHandler.getVehicles(type, location, startInstant, endInstant);
+		vehicles = dbHandler.getVehicles(typeParse, locationParse, startInstant, endInstant);
 		clientInterface.addVehicle(vehicles, vehicles.length);
 		return;
 		
 	}
+
+	public void getCustomerAccount(String license, String cellphone,String name, String address){
+		dbHandler.createCustomerAccount(license, cellphone, name, address);
+		}
 
 	public void makeReservation(String vtname, String location, String dlicense, String endTime,Instant startTimestamp, Instant endTimestamp, String cardName, String cardNo, Instant expDate) {
 		//try creating res
@@ -107,6 +112,11 @@ public class SuperRent implements LoginWindowDelegate, ClientInterfaceDelegate,G
 		}
 	}
 	
+	public ReservationReceipt createReservation(String vtname, String location, String dlicense, Instant startInstant,
+			Instant endInstant, String cardName, String cardNo, Instant expInstant){
+				ReservationReceipt receipt = dbHandler.createReservation(vtname, location, dlicense,startInstant, endInstant,cardName, cardNo, expInstant);
+				return receipt;
+			}
 	
 	//main method
 	public static void main(String args[]) {
