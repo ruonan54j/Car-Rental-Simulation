@@ -3,14 +3,21 @@ package ca.ubc.cs304.ui;
 import java.util.ArrayList;
 import java.awt.event.*;
 import java.rmi.registry.LocateRegistry;
-import java.awt.*; 
-import javax.swing.*; 
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import ca.ubc.cs304.delegates.ClientInterfaceDelegate;
+import ca.ubc.cs304.model.CustomerModel;
+import ca.ubc.cs304.model.ReservationReceipt;
+import ca.ubc.cs304.model.ReturnReceipt;
 import ca.ubc.cs304.model.VehicleModel;
 
 import javax.swing.JFormattedTextField;
+import javax.swing.border.EmptyBorder;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -24,6 +31,17 @@ public class ClientInterface extends JFrame implements ActionListener {
 	private JTextField location;
 	private JFormattedTextField formatDateStart;
 	private JFormattedTextField formatDateEnd;
+	JTextField license;
+	JTextField name;
+	JTextField phone;
+	JTextField address;
+	JTextField cardName;
+
+	JTextField cardNo;
+	JTextField expDate;
+	JTextField start;
+	JTextField end;
+
 	// delegate
 	private ClientInterfaceDelegate delegate;
 	JPanel contentPane;
@@ -152,17 +170,20 @@ public class ClientInterface extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		contentPane.removeAll();
 		delegate.getVehicles(String.valueOf(carType.getText()), String.valueOf(location.getText()),String.valueOf(formatDateStart.getText()),String.valueOf(formatDateEnd.getText()));
 	}
 
 	//show details of car
 	public void viewDetails(VehicleModel[] vlist,GridBagConstraints c, GridBagLayout gb ) {
-		
+		contentPane.removeAll();
 		for(VehicleModel v : vlist){
 			JPanel rowPane = new JPanel();
 			rowPane.setLayout(new FlowLayout(FlowLayout.LEADING));
 			JPanel rowPane2 = new JPanel();
 			rowPane2.setLayout(new FlowLayout(FlowLayout.LEADING));
+			JPanel rowPane3 = new JPanel();
+			rowPane3.setLayout(new FlowLayout(FlowLayout.CENTER));
 			System.out.println(v.getColor());
 			JLabel makeL = new JLabel("make: "+v.getMake());
 			JLabel vlicenseL = new JLabel("license: "+v.getVlicense());
@@ -173,7 +194,6 @@ public class ClientInterface extends JFrame implements ActionListener {
 			JLabel vtnameL = new JLabel("type: "+v.getVtname());
 			JLabel locationL = new JLabel("location: "+v.getLocation());
 			
-		
 			rowPane.add(makeL);
 			rowPane.add(vlicenseL);
 			rowPane.add(yearL);
@@ -184,6 +204,18 @@ public class ClientInterface extends JFrame implements ActionListener {
 			rowPane2.add(locationL);
 			contentPane.add(rowPane);
 			contentPane.add(rowPane2);
+			JButton reserveBtn = new JButton("Reserve");
+			rowPane3.add(reserveBtn);
+			contentPane.add(rowPane3);
+			reserveBtn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					contentPane.removeAll();
+					contentPane.revalidate();
+					System.out.println("whathaha");
+					showAccount(v);
+					System.out.println("whathaha2");
+				}
+			 });
 		}
 		this.pack();
 
@@ -193,6 +225,161 @@ public class ClientInterface extends JFrame implements ActionListener {
 
 		// make the window visible
 		 this.setVisible(true);
+	}
+
+	public void showAccount(VehicleModel v){
+		
+		JLabel typeLabel = new JLabel("Enter License: ");
+		license = new JTextField(TEXT_FIELD_WIDTH);
+		JLabel nameL = new JLabel("Enter Name: ");
+		name = new JTextField(TEXT_FIELD_WIDTH);
+
+		JLabel phoneL = new JLabel("Enter phone number: ");
+		phone = new JTextField(TEXT_FIELD_WIDTH);
+
+		JLabel addressL = new JLabel("Enter address: ");
+		address = new JTextField(TEXT_FIELD_WIDTH);
+
+		JLabel cnameLabel = new JLabel("Enter Card Name: ");
+		cardName = new JTextField(TEXT_FIELD_WIDTH);
+
+		JLabel cnoLabel = new JLabel("Enter Card No: ");
+		cardNo = new JTextField(TEXT_FIELD_WIDTH);
+
+		JLabel expLabel = new JLabel("Enter card expiration: ");
+		expDate = new JFormattedTextField(createFormatter("####-##-## ##:##:##"));
+
+		JLabel startLabel = new JLabel("Enter start time: ");
+		start = new JFormattedTextField(createFormatter("####-##-## ##:##:##"));
+
+		JLabel endLabel = new JLabel("Enter end time: ");
+		end = new JFormattedTextField(createFormatter("####-##-## ##:##:##"));
+
+		JPanel rowPane = new JPanel();
+		rowPane.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		rowPane.add(typeLabel);
+		rowPane.add(license);
+		
+
+		JPanel row1 = new JPanel();
+		row1.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		row1.add(nameL);
+		row1.add(name);
+
+		JPanel row2 = new JPanel();
+		row2.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		row2.add(phoneL);
+		row2.add(phone);
+
+		JPanel row3 = new JPanel();
+		row3.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		row3.add(addressL);
+		row3.add(address);
+		
+		JPanel rowPane2 = new JPanel();
+		rowPane2.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		rowPane2.add(cnameLabel);
+		rowPane2.add(cardName);
+		
+		JPanel rowPane3 = new JPanel();
+		rowPane3.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		rowPane3.add(cnoLabel);
+		rowPane3.add(cardNo);
+
+		JPanel rowPane4 = new JPanel();
+		rowPane4.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		rowPane4.add(expLabel);
+		rowPane4.add(expDate);
+		
+		JPanel rowPane5 = new JPanel();
+		rowPane5.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		rowPane5.add(startLabel);
+		rowPane5.add(start);
+		JPanel rowPane6 = new JPanel();
+		rowPane6.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		rowPane6.add(endLabel);
+		rowPane6.add(end);
+
+		contentPane.add(rowPane);
+
+		contentPane.add(row1);
+		contentPane.add(row2);
+		contentPane.add(row3);
+
+		contentPane.add(rowPane2);
+		contentPane.add(rowPane3);
+		contentPane.add(rowPane4);
+		contentPane.add(rowPane5);
+		contentPane.add(rowPane6);
+
+
+		JButton confirmBtn = new JButton("Confirm");
+		contentPane.add(confirmBtn);
+
+		//parse time
+		
+		confirmBtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				confirmAction(v);
+		}
+		});
+
+		this.pack();
+
+		Dimension d = this.getToolkit().getScreenSize();
+		Rectangle r = this.getBounds();
+		this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
+
+		// make the window visible
+		this.setVisible(true);
+	}
+
+	public void confirmAction(VehicleModel v){
+		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+		Date dateStart=null;
+		Date dateEnd=null;
+		Date exp = null;
+		Instant startInstant = null;
+		Instant endInstant = null;
+		Instant expInstant = null;
+		try {
+			dateStart = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(String.valueOf(end.getText()));
+			dateEnd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(String.valueOf(start.getText()));	
+			exp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(String.valueOf(expDate.getText()));	
+			startInstant = dateStart.toInstant();
+			endInstant = dateEnd.toInstant();
+			expInstant = exp.toInstant();
+			
+
+		}catch (ParseException err) {
+			System.out.println("fail parse");
+		}
+	
+
+		delegate.getCustomerAccount(String.valueOf(license.getText()), String.valueOf(phone.getText()),String.valueOf(name.getText()), String.valueOf(address.getText()));
+		ReservationReceipt receipt = delegate.createReservation(v.getVtname(), v.getLocation(), String.valueOf(license.getText()), startInstant, endInstant, String.valueOf(cardName.getText()), String.valueOf(cardNo.getText()), expInstant);
+		contentPane.removeAll();
+		
+		JLabel confno = new JLabel("confirmation number: "+receipt.getConfNo());
+		JLabel vtype = new JLabel("vehicle type:"+receipt.getVehicleType());
+		JLabel location = new JLabel("location:"+receipt.getLocation());					
+		JLabel startL = new JLabel("start time: "+receipt.getstartTimestamp());
+		JLabel endL = new JLabel("end time: "+receipt.getendTimestamp());
+
+		contentPane.add(confno);
+		contentPane.add(vtype);
+		contentPane.add(location);
+		contentPane.add(startL);
+		contentPane.add(endL);
+		
+		this.pack();
+
+		Dimension d = this.getToolkit().getScreenSize();
+		Rectangle r = this.getBounds();
+		this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
+
+		// make the window visible
+		this.setVisible(true);
 	}
 	
 }
