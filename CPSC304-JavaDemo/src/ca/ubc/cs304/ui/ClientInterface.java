@@ -171,12 +171,36 @@ public class ClientInterface extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		contentPane.removeAll();
+		JPanel rowPane = new JPanel();
+		rowPane.setLayout(new FlowLayout(FlowLayout.CENTER));
+	
+		JButton homeButton = new JButton("Home");
+		rowPane.add(homeButton);
+		contentPane.add(rowPane);
+		homeButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				contentPane.removeAll();
+				showFrame(delegate);
+			}
+		 });
+
 		delegate.getVehicles(String.valueOf(carType.getText()), String.valueOf(location.getText()),String.valueOf(formatDateStart.getText()),String.valueOf(formatDateEnd.getText()));
 	}
 
 	//show details of car
 	public void viewDetails(VehicleModel[] vlist,GridBagConstraints c, GridBagLayout gb ) {
 		contentPane.removeAll();
+		JButton homeButton = new JButton("Home");
+		JPanel rowPane0 = new JPanel();
+		rowPane0.setLayout(new FlowLayout(FlowLayout.CENTER));
+		rowPane0.add(homeButton);
+		contentPane.add(rowPane0);
+		homeButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				contentPane.removeAll();
+				showFrame(delegate);
+			}
+		 });
 		for(VehicleModel v : vlist){
 			JPanel rowPane = new JPanel();
 			rowPane.setLayout(new FlowLayout(FlowLayout.LEADING));
@@ -210,10 +234,20 @@ public class ClientInterface extends JFrame implements ActionListener {
 			reserveBtn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e){
 					contentPane.removeAll();
-					contentPane.revalidate();
-					System.out.println("whathaha");
+					JButton homeButton = new JButton("Home");
+
+					JPanel rowPane0 = new JPanel();
+					rowPane0.setLayout(new FlowLayout(FlowLayout.CENTER));
+					rowPane0.add(homeButton);
+					contentPane.add(rowPane0);
+			
+					homeButton.addActionListener(new ActionListener(){
+						public void actionPerformed(ActionEvent e){
+							contentPane.removeAll();
+							showFrame(delegate);
+						}
+					});
 					showAccount(v);
-					System.out.println("whathaha2");
 				}
 			 });
 		}
@@ -354,12 +388,36 @@ public class ClientInterface extends JFrame implements ActionListener {
 		}catch (ParseException err) {
 			System.out.println("fail parse");
 		}
-	
+		//check all fields present
+		if(v.getVtname().length() < 1 || v.getLocation().length()<1 || String.valueOf(license.getText()).length()<1||startInstant==null || endInstant ==null || String.valueOf(cardName.getText()).length() <1 || String.valueOf(cardNo.getText()).length() <1 ||expInstant==null ||String.valueOf(license.getText()).length()<1 || String.valueOf(phone.getText()).length()<1|| String.valueOf(name.getText()).length()<1 || String.valueOf(address.getText()).length()<1 ){
+			JLabel errLabel = new JLabel("ERROR: Can not have empty fields");
+			contentPane.add(errLabel);
+			this.pack();
+
+			Dimension d = this.getToolkit().getScreenSize();
+			Rectangle r = this.getBounds();
+			this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
+
+			// make the window visible
+			this.setVisible(true);
+			return;
+		}
 
 		delegate.getCustomerAccount(String.valueOf(license.getText()), String.valueOf(phone.getText()),String.valueOf(name.getText()), String.valueOf(address.getText()));
 		ReservationReceipt receipt = delegate.createReservation(v.getVtname(), v.getLocation(), String.valueOf(license.getText()), startInstant, endInstant, String.valueOf(cardName.getText()), String.valueOf(cardNo.getText()), expInstant);
 		contentPane.removeAll();
-		
+		JButton homeButton = new JButton("Home");
+
+		JPanel rowPane0 = new JPanel();
+		rowPane0.setLayout(new FlowLayout(FlowLayout.CENTER));
+		rowPane0.add(homeButton);
+		contentPane.add(rowPane0);
+		homeButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				contentPane.removeAll();
+				showFrame(delegate);
+			}
+		 });
 		JLabel confno = new JLabel("confirmation number: "+receipt.getConfNo());
 		JLabel vtype = new JLabel("vehicle type:"+receipt.getVehicleType());
 		JLabel location = new JLabel("location:"+receipt.getLocation());					
