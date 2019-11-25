@@ -14,6 +14,10 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import ca.ubc.cs304.model.VehicleModel;
+import ca.ubc.cs304.model.DailyRentalReport;
+import ca.ubc.cs304.model.DailyRentalReportBranch;
+import ca.ubc.cs304.model.DailyReturnReport;
+import ca.ubc.cs304.model.DailyReturnReportBranch;
 import ca.ubc.cs304.model.RentalReceipt;
 import ca.ubc.cs304.model.ReservationReceipt;
 import ca.ubc.cs304.model.ReturnReceipt;
@@ -124,6 +128,27 @@ public class SuperRent implements LoginWindowDelegate, ClientInterfaceDelegate,G
 		ReturnReceipt receipt = dbHandler.returnVehicle(rid, returnTimestamp, endOdometer, fullTank);
 		return receipt;
 	}
+
+	public DailyRentalReport getDailyRentals() {
+		DailyRentalReport report = dbHandler.getDailyRentals();
+		return report;
+	}
+
+	public DailyRentalReportBranch getDailyRentalsBranch(String branch) {
+		DailyRentalReportBranch report = dbHandler.getDailyRentalsBranch(branch);
+		return report;
+	}
+
+	public DailyReturnReport getDailyReturns() {
+		DailyReturnReport report = dbHandler.getDailyReturns();
+		return report;
+	}
+
+	public DailyReturnReportBranch getDailyReturnsBranch(String branch) {
+		DailyReturnReportBranch report = dbHandler.getDailyReturnsBranch(branch);
+		return report;
+	}
+
 	//main method
 	public static void main(String args[]) {
 		SuperRent superRent = new SuperRent();
