@@ -550,6 +550,7 @@ public class ClerkInterface extends JFrame{
 		rowPane4.add(returnBtn);
 
 		contentPane.add(rowPane);
+		contentPane.add(rowPane1);
 		contentPane.add(rowPane2);
 		contentPane.add(rowPane3);
 		contentPane.add(rowPane4);
@@ -559,6 +560,7 @@ public class ClerkInterface extends JFrame{
 		returnBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				contentPane.removeAll();
+				
 				ReturnReceipt receipt = delegate.returnVehicle(Integer.valueOf(rid.getText()), Instant.now(), Double.valueOf(endOdometer.getText()), Boolean.valueOf(fullTank.getText()));
 				System.out.println(Boolean.valueOf(fullTank.getText()));
 				openReturnReceipt(receipt);

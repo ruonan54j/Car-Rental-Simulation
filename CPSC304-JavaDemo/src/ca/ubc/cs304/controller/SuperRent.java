@@ -157,9 +157,22 @@ public class SuperRent
 		return report;
 	}
 	
+	public DailyReturnReport getDailyReturns() {
+		DailyReturnReport r = dbHandler.getDailyReturns();
+		return r;
+	}
+
+
+	public DailyReturnReportBranch getDailyReturnsBranch(String key) {
+		DailyReturnReportBranch report = dbHandler.getDailyReturnsBranch(key);
+		return report;
+	}
+	
 	// main method
 	public static void main(String args[]) {
 		SuperRent superRent = new SuperRent();
 		superRent.start();
 	}
+
+
 }
