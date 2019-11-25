@@ -30,7 +30,7 @@ public class Testing implements LoginWindowDelegate {
 	}
 
 	private void start() {
-		login("ora_rjia","a33550161");
+		login("ora_wgu","a31875164");
 	}
 
 	/**
@@ -48,8 +48,8 @@ public class Testing implements LoginWindowDelegate {
 		Testing t = new Testing();
         t.start();
         
-        String vtname = "truck";
-        String location = "vancouver";
+        String vtname = "Truck";
+        String location = "Vancouver";
         Instant startTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2019-11-20 02:00:00").toInstant();
         Instant endTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2019-11-21 02:00:00").toInstant();
 		VehicleModel[] vehicles = t.dbHandler.getVehicles(vtname, location, startTimestamp, endTimestamp);
@@ -62,8 +62,8 @@ public class Testing implements LoginWindowDelegate {
 		boolean createAccountSuccess = t.dbHandler.createCustomerAccount(dlicense, cellphone, name, address);
 		System.out.println(createAccountSuccess);
 
-		String vtnameRes = "truck";
-		String locationRes = "vancouver";
+		String vtnameRes = "Truck";
+		String locationRes = "Vancouver";
 		// Same dlicense
 		Instant startRes = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2019-11-20 02:00:00").toInstant();
 		Instant endRes = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2019-11-24 06:00:00").toInstant();
@@ -81,11 +81,11 @@ public class Testing implements LoginWindowDelegate {
 		System.out.println("Rent receipt 1 odometer: " + rentReceipt.getStartOdometer());
 		System.out.println("Rent receipt 1 endtime: " + rentReceipt.getEndTimestamp());
 
-		RentalReceipt rentReceipt2 = t.dbHandler.createRentalNoRes(location, Instant.now(), cardName, cardNo, expDate, vtname, dlicense, Instant.now(), endTimestamp); //Try for same location and vehicle type
+		RentalReceipt rentReceipt2 = t.dbHandler.createRentalNoRes(location, Instant.now(), cardName, cardNo, expDate, vtname, dlicense, endTimestamp); //Try for same location and vehicle type
 		System.out.println("Rent receipt 2 vid: " + rentReceipt2.getVid());
 
 		// Test no available cars for rental
-		RentalReceipt rentReceipt3 = t.dbHandler.createRentalNoRes("burnaby", Instant.now(), cardName, cardNo, expDate, vtname, dlicense, Instant.now(), endTimestamp); //Try when no vehicles are available at the location
+		RentalReceipt rentReceipt3 = t.dbHandler.createRentalNoRes("Burnaby", Instant.now(), cardName, cardNo, expDate, vtname, dlicense, endTimestamp); //Try when no vehicles are available at the location
 		System.out.println("Rent receipt 3 null?: " + (rentReceipt3 == null));
 
 		// Test return..
@@ -102,21 +102,21 @@ public class Testing implements LoginWindowDelegate {
 		DailyRentalReport dailyRentals = t.dbHandler.getDailyRentals();
 		System.out.println(dailyRentals.totalVehicles);
 
-		DailyRentalReportBranch dailyRentalsBranch = t.dbHandler.getDailyRentalsBranch("vancouver");
+		DailyRentalReportBranch dailyRentalsBranch = t.dbHandler.getDailyRentalsBranch("Vancouver");
 		System.out.println(dailyRentalsBranch.totalBranchVehicles);
 
-		DailyRentalReportBranch dailyRentalsBranch2 = t.dbHandler.getDailyRentalsBranch("richmond");
+		DailyRentalReportBranch dailyRentalsBranch2 = t.dbHandler.getDailyRentalsBranch("Richmond");
 		System.out.println(dailyRentalsBranch2.totalBranchVehicles);
 
 		DailyReturnReport dailyReturns = t.dbHandler.getDailyReturns();
 		System.out.println(dailyReturns.totalVehicles);
 		System.out.println(dailyReturns.totalRevenue);
 
-		DailyReturnReportBranch dailyReturnsBranch = t.dbHandler.getDailyReturnsBranch("vancouver");
+		DailyReturnReportBranch dailyReturnsBranch = t.dbHandler.getDailyReturnsBranch("Vancouver");
 		System.out.println(dailyReturnsBranch.totalBranchVehicles);
 		System.out.println(dailyReturnsBranch.totalBranchRevenue);
 
-		DailyReturnReportBranch dailyReturnsBranch2 = t.dbHandler.getDailyReturnsBranch("richmond");
+		DailyReturnReportBranch dailyReturnsBranch2 = t.dbHandler.getDailyReturnsBranch("Richmond");
 		System.out.println(dailyReturnsBranch2 == null);
 
 	}

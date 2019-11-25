@@ -10,13 +10,12 @@ import ca.ubc.cs304.ui.ClientInterface;
 import ca.ubc.cs304.ui.GenericInterface;
 import ca.ubc.cs304.ui.LoginWindow;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import ca.ubc.cs304.model.VehicleModel;
 import ca.ubc.cs304.model.CustomerModel;
+
 import ca.ubc.cs304.model.DailyRentalReport;
 import ca.ubc.cs304.model.DailyRentalReportBranch;
 import ca.ubc.cs304.model.DailyReturnReport;
@@ -42,7 +41,8 @@ public class SuperRent
 	}
 
 	private void start() {
-		login("ora_rjia", "a33550161");
+
+		login("ora_wgu","a31875164");
 	}
 
 	/**
@@ -103,7 +103,6 @@ public class SuperRent
 			dateEnd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(endTime);
 			startInstant = dateStart.toInstant();
 			endInstant = dateEnd.toInstant();
-
 		} catch (ParseException e) {
 		}
 
@@ -124,10 +123,9 @@ public class SuperRent
 		return receipt;
 	}
 
-	public RentalReceipt createRentalNoRes(String location, Instant now, String cardName, String cardNo,
-			Instant expDate, String vtname, String dlicense, Instant startTimestamp, Instant endTimestamp) {
-		RentalReceipt receipt = dbHandler.createRentalNoRes(location, now, cardName, cardNo, expDate, vtname, dlicense,
-				startTimestamp, endTimestamp);
+
+	public RentalReceipt createRentalNoRes(String location, Instant now, String cardName, String cardNo, Instant expDate, String vtname, String dlicense, Instant endTimestamp){
+		RentalReceipt receipt = dbHandler.createRentalNoRes(location, now, cardName, cardNo, expDate, vtname, dlicense, endTimestamp);
 		return receipt;
 	}
 
@@ -136,8 +134,7 @@ public class SuperRent
 		return receipt;
 	}
 
-	public ReturnReceipt returnVehicle(int rid, Instant returnTimestamp, double endOdometer, boolean fullTank) {
-
+ public ReturnReceipt returnVehicle(int rid, Instant returnTimestamp, double endOdometer, boolean fullTank){
 		ReturnReceipt receipt = dbHandler.returnVehicle(rid, returnTimestamp, endOdometer, fullTank);
 		return receipt;
 	}
@@ -167,8 +164,8 @@ public class SuperRent
 		DailyReturnReportBranch report = dbHandler.getDailyReturnsBranch(key);
 		return report;
 	}
-	
-	// main method
+
+
 	public static void main(String args[]) {
 		SuperRent superRent = new SuperRent();
 		superRent.start();

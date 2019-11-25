@@ -20,4 +20,5 @@ public interface ClerkInterfaceDelegate{
     public RentalReceipt createRentalWithRes(int confNo, Instant now);
 	public RentalReceipt createRentalNoRes(String location, Instant now, String cardName, String cardNo, Instant expDate, String vtname, String dlicense, Instant startTimestamp, Instant endTimestamp);
 	public DailyReturnReportBranch getDailyReturnsBranch(String key);
+
 }
