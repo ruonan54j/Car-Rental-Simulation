@@ -123,7 +123,6 @@ public class SuperRent
 		return receipt;
 	}
 
-
 	public RentalReceipt createRentalNoRes(String location, Instant now, String cardName, String cardNo, Instant expDate, String vtname, String dlicense, Instant endTimestamp){
 		RentalReceipt receipt = dbHandler.createRentalNoRes(location, now, cardName, cardNo, expDate, vtname, dlicense, endTimestamp);
 		return receipt;

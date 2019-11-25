@@ -105,7 +105,7 @@ public class ClerkInterface extends JFrame{
 		report1Button.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent e){
-                openRentalReport();
+                openReport();
 			}
 		 });
 		 report2Button.addActionListener(new ActionListener(){
@@ -470,7 +470,7 @@ public class ClerkInterface extends JFrame{
 					dateExp= new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(expDate.getText()));
 					endInstant = dateEnd.toInstant();
 					expInstant = dateExp.toInstant();
-					RentalReceipt receipt = delegate.createRentalNoRes(String.valueOf(location.getText()), startInstant, String.valueOf(cardName.getText()), String.valueOf(cardNo.getText()), expInstant, String.valueOf(vtname.getText()), String.valueOf(dlicense.getText()), startInstant, endInstant);
+					RentalReceipt receipt = delegate.createRentalNoRes(String.valueOf(location.getText()), Instant.now(), String.valueOf(cardName.getText()), String.valueOf(cardNo.getText()), expInstant, String.valueOf(vtname.getText()), String.valueOf(dlicense.getText()), endInstant);
 
 					if (receipt != null){
 						openRentalReceipt(receipt);
