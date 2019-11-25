@@ -355,7 +355,9 @@ public class ClerkInterface extends JFrame{
 		contentPane.add(rowPane2);
 		//add action to btn
 		rentBtn.addActionListener(new ActionListener(){
+			
 			public void actionPerformed(ActionEvent e){
+				contentPane.removeAll();
 				RentalReceipt receipt = delegate.createRentalWithRes(Integer.valueOf(confField.getText()), Instant.now());
 				//Currently the GUI freezes if receipt is null, even with this if check
 				if (receipt != null){
