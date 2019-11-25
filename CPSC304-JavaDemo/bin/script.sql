@@ -78,15 +78,15 @@ insert into VehicleTypes values ('TypeTest','test', 3.00, 23.00, 73.00, 20.00);
 insert into VehicleTypes values ('TypeTest2','loud', 1.44, 10.50, 65.00, 20.00);
 
 
-insert into Vehicles values (1,'plate1','make1','m1',12,'blue',12.23,'b','Electric','Vancouver');
-insert into Vehicles values (2,'plate2','make2','m2',02,'red',12.23,'f','Truck','Vancouver');
-insert into Vehicles values (3,'plate3','make1','m2',02,'red',12.23,'f','Truck','Vancouver');
-insert into Vehicles values (4,'plate4','make1','m3',12,'blue',12.23,'b','Electric','Vancouver');
-insert into Vehicles values (5,'plate5','make2','m5',02,'red',12.23,'f','Truck','Vancouver');
-insert into Vehicles values (6,'plate6','make1','m2',02,'red',12.23,'f','Truck','Vancouver');
-insert into Vehicles values (7,'plate7','make3','m2',02,'red',12.23,'f','Cruiser','Richmond');
-insert into Vehicles values (8,'plate7','make2','m2',02,'red',12.23,'f','Truck','Richmond');
-insert into Vehicles values (9,'plate7','make2','m2',02,'red',12.23,'f','Cruiser','Richmond');
-insert into Vehicles values (10,'plate7','make1','m2',02,'red',12.23,'f','Electric','Richmond');
-insert into Vehicles values (11,'plate7','make1','m2',02,'red',12.23,'f','Cruiser','Richmond');
+insert into Vehicles values (1,'plate1','make1','m1',12,'blue',12.23,'Available','Electric','Vancouver');
+insert into Vehicles values (2,'plate2','make2','m2',02,'red',12.23,'Available','Truck','Vancouver');
+insert into Vehicles values (3,'plate3','make1','m2',02,'red',12.23,'Available','Truck','Vancouver');
+insert into Vehicles values (4,'plate4','make1','m3',12,'blue',12.23,'Available','Electric','Vancouver');
+insert into Vehicles values (5,'plate5','make2','m5',02,'red',12.23,'Available','Truck','Vancouver');
+insert into Vehicles values (6,'plate6','make1','m2',02,'red',12.23,'Available','Truck','Vancouver');
+insert into Vehicles values (7,'plate7','make3','m2',02,'red',12.23,'Available','Cruiser','Richmond');
+insert into Vehicles values (8,'plate7','make2','m2',02,'red',12.23,'Available','Truck','Richmond');
+insert into Vehicles values (9,'plate7','make2','m2',02,'red',12.23,'Available','Cruiser','Richmond');
+insert into Vehicles values (10,'plate7','make1','m2',02,'red',12.23,'Available','Electric','Richmond');
+insert into Vehicles values (11,'plate7','make1','m2',02,'red',12.23,'Available','Cruiser','Richmond');
 

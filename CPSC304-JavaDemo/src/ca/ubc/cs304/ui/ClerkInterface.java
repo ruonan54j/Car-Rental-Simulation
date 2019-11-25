@@ -198,7 +198,6 @@ public class ClerkInterface extends JFrame{
 			}
 		 });
 
-
 		DailyReturnReport report = delegate.getDailyReturns();
 
 		JLabel totalReturns = new JLabel("Total Rentals: " + report.totalVehicles);
@@ -407,16 +406,12 @@ public class ClerkInterface extends JFrame{
 		vtname = new JTextField(TEXT_FIELD_WIDTH);
 		JLabel dlicenseL = new JLabel("Drivers License: ");
 		dlicense = new JTextField(TEXT_FIELD_WIDTH);
-		JLabel startTimestampL = new JLabel("Start (yyyy-MM-dd HH:mm): "); 
-		startTimestamp =  new JFormattedTextField(createFormatter("####-##-## ##:##"));
-		startTimestamp.setColumns(TEXT_FIELD_WIDTH); 
 		JLabel endTimestampL = new JLabel("End (yyyy-MM-dd HH:mm): "); 
 		endTimestamp =  new JFormattedTextField(createFormatter("####-##-## ##:##"));
 		endTimestamp.setColumns(TEXT_FIELD_WIDTH); 
 		JButton rentBtn = new JButton("Rent");
 		JPanel rowPane = new JPanel();
 		JPanel rowPane1 = new JPanel();
-		JPanel rowPane2 = new JPanel();
 		JPanel rowPane3 = new JPanel();
 		JPanel rowPane4 = new JPanel();
 		JPanel rowPane5 = new JPanel();
@@ -431,10 +426,6 @@ public class ClerkInterface extends JFrame{
 		rowPane1.add(dlicenseL);
 		rowPane1.add(dlicense);
 
-		rowPane2.setLayout(new FlowLayout(FlowLayout.TRAILING));
-		rowPane2.add(startTimestampL);
-		rowPane2.add(startTimestamp);
-		
 		rowPane3.setLayout(new FlowLayout(FlowLayout.TRAILING));
 		rowPane3.add(endTimestampL);
 		rowPane3.add(endTimestamp);
@@ -459,7 +450,6 @@ public class ClerkInterface extends JFrame{
 
 		contentPane.add(rowPane);
 		contentPane.add(rowPane1);
-		contentPane.add(rowPane2);
 		contentPane.add(rowPane3);
 		contentPane.add(rowPane4);
 		contentPane.add(rowPane5);
@@ -470,20 +460,16 @@ public class ClerkInterface extends JFrame{
 		rentBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				contentPane.removeAll();
-				Date dateStart=null;
 				Date dateEnd=null;
 				Date dateExp = null;
-				Instant startInstant = null;
 				Instant endInstant = null;
 				Instant expInstant =  null;
 				try {
-					dateStart = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(String.valueOf(startTimestamp.getText()));
 					dateEnd = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(String.valueOf(endTimestamp.getText()));
 					dateExp= new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(expDate.getText()));
-					startInstant = dateStart.toInstant();
 					endInstant = dateEnd.toInstant();
 					expInstant = dateExp.toInstant();
-					RentalReceipt receipt = delegate.createRentalNoRes(String.valueOf(location.getText()), Instant.now(), String.valueOf(cardName.getText()), String.valueOf(cardNo.getText()), expInstant, String.valueOf(vtname.getText()), String.valueOf(dlicense.getText()), startInstant, endInstant);
+					RentalReceipt receipt = delegate.createRentalNoRes(String.valueOf(location.getText()), Instant.now(), String.valueOf(cardName.getText()), String.valueOf(cardNo.getText()), expInstant, String.valueOf(vtname.getText()), String.valueOf(dlicense.getText()), endInstant);
 					if (receipt != null){
 						openRentalReceipt(receipt);
 					}

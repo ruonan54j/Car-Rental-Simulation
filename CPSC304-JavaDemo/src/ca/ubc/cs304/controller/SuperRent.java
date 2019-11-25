@@ -115,8 +115,8 @@ public class SuperRent implements LoginWindowDelegate, ClientInterfaceDelegate,G
 				return receipt;
 			}
 
-	public RentalReceipt createRentalNoRes(String location, Instant now, String cardName, String cardNo, Instant expDate, String vtname, String dlicense, Instant startTimestamp, Instant endTimestamp){
-		RentalReceipt receipt = dbHandler.createRentalNoRes(location, now, cardName, cardNo, expDate, vtname, dlicense, startTimestamp, endTimestamp);
+	public RentalReceipt createRentalNoRes(String location, Instant now, String cardName, String cardNo, Instant expDate, String vtname, String dlicense, Instant endTimestamp){
+		RentalReceipt receipt = dbHandler.createRentalNoRes(location, now, cardName, cardNo, expDate, vtname, dlicense, endTimestamp);
 		return receipt;
 	}
 	public RentalReceipt createRentalWithRes(int confNo, Instant now){
