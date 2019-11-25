@@ -12,7 +12,10 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import ca.ubc.cs304.model.VehicleModel;
-import ca.ubc.cs304.model.VehicleReturnWithPrice;
+import ca.ubc.cs304.model.DailyRentalReport;
+import ca.ubc.cs304.model.DailyRentalReportBranch;
+import ca.ubc.cs304.model.DailyReturnReport;
+import ca.ubc.cs304.model.DailyReturnReportBranch;
 import ca.ubc.cs304.model.RentalReceipt;
 import ca.ubc.cs304.model.ReservationReceipt;
 import ca.ubc.cs304.model.ReturnReceipt;
@@ -76,6 +79,7 @@ public class Testing implements LoginWindowDelegate {
 		System.out.println("Rent receipt 1 conf: " + rentReceipt.getConfNo());
 		System.out.println("Rent receipt 1 vid: " + rentReceipt.getVid());
 		System.out.println("Rent receipt 1 odometer: " + rentReceipt.getStartOdometer());
+		System.out.println("Rent receipt 1 endtime: " + rentReceipt.getEndTimestamp());
 
 		RentalReceipt rentReceipt2 = t.dbHandler.createRentalNoRes(location, Instant.now(), cardName, cardNo, expDate, vtname, dlicense, Instant.now(), endTimestamp); //Try for same location and vehicle type
 		System.out.println("Rent receipt 2 vid: " + rentReceipt2.getVid());
@@ -95,31 +99,25 @@ public class Testing implements LoginWindowDelegate {
 		ReturnReceipt returnReceipt2 = t.dbHandler.returnVehicle(52, Instant.now(), 600, true);
 		System.out.println("Return receipt 2 null ? " + (returnReceipt2 == null));
 
-		VehicleModel[] dailyRentals = t.dbHandler.getDailyRentals();
-		System.out.println(dailyRentals.length);
-		System.out.println(dailyRentals[0].getVid());
-		System.out.println(dailyRentals[1].getVid());
+		DailyRentalReport dailyRentals = t.dbHandler.getDailyRentals();
+		System.out.println(dailyRentals.totalVehicles);
 
-		VehicleModel[] dailyRentalsBranch = t.dbHandler.getDailyRentalsBranch("vancouver");
-		System.out.println(dailyRentalsBranch.length);
-		System.out.println(dailyRentalsBranch[0].getVid());
-		System.out.println(dailyRentalsBranch[1].getVid());
+		DailyRentalReportBranch dailyRentalsBranch = t.dbHandler.getDailyRentalsBranch("vancouver");
+		System.out.println(dailyRentalsBranch.totalBranchVehicles);
 
-		VehicleModel[] dailyRentalsBranch2 = t.dbHandler.getDailyRentalsBranch("richmond");
-		System.out.println(dailyRentalsBranch2.length);
+		DailyRentalReportBranch dailyRentalsBranch2 = t.dbHandler.getDailyRentalsBranch("richmond");
+		System.out.println(dailyRentalsBranch2.totalBranchVehicles);
 
-		VehicleReturnWithPrice[] dailyReturns = t.dbHandler.getDailyReturns();
-		System.out.println(dailyReturns.length);
-		System.out.println(dailyReturns[0].getVehicle().getVid());
-		System.out.println(dailyReturns[0].getPrice());
+		DailyReturnReport dailyReturns = t.dbHandler.getDailyReturns();
+		System.out.println(dailyReturns.totalVehicles);
+		System.out.println(dailyReturns.totalRevenue);
 
-		VehicleReturnWithPrice[] dailyReturnsBranch = t.dbHandler.getDailyReturnsBranch("vancouver");
-		System.out.println(dailyReturnsBranch.length);
-		System.out.println(dailyReturnsBranch[0].getVehicle().getVid());
-		System.out.println(dailyReturnsBranch[0].getPrice());
+		DailyReturnReportBranch dailyReturnsBranch = t.dbHandler.getDailyReturnsBranch("vancouver");
+		System.out.println(dailyReturnsBranch.totalBranchVehicles);
+		System.out.println(dailyReturnsBranch.totalBranchRevenue);
 
-		VehicleReturnWithPrice[] dailyReturnsBranch2 = t.dbHandler.getDailyReturnsBranch("richmond");
-		System.out.println(dailyReturnsBranch2.length);
+		DailyReturnReportBranch dailyReturnsBranch2 = t.dbHandler.getDailyReturnsBranch("richmond");
+		System.out.println(dailyReturnsBranch2 == null);
 
 	}
 }

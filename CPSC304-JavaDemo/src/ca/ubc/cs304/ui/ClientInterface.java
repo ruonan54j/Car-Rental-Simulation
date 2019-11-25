@@ -211,14 +211,14 @@ public class ClientInterface extends JFrame implements ActionListener {
 			JPanel rowPane3 = new JPanel();
 			rowPane3.setLayout(new FlowLayout(FlowLayout.CENTER));
 			System.out.println(v.getColor());
-			JLabel makeL = new JLabel("make: "+v.getMake());
-			JLabel vlicenseL = new JLabel("license: "+v.getVlicense());
-			JLabel yearL = new JLabel("year: "+v.getYear());
-			JLabel colorL = new JLabel("color: "+v.getColor());
-			JLabel odometerL = new JLabel("odometer: "+v.getOdometer());
-			JLabel statusL = new JLabel("status: "+v.getStatus());
-			JLabel vtnameL = new JLabel("type: "+v.getVtname());
-			JLabel locationL = new JLabel("location: "+v.getLocation());
+			JLabel makeL = new JLabel("Make: "+v.getMake());
+			JLabel vlicenseL = new JLabel("License: "+v.getVlicense());
+			JLabel yearL = new JLabel("Year: "+v.getYear());
+			JLabel colorL = new JLabel("Color: "+v.getColor());
+			JLabel odometerL = new JLabel("Odometer: "+v.getOdometer());
+			JLabel statusL = new JLabel("Status: "+v.getStatus());
+			JLabel vtnameL = new JLabel("Type: "+v.getVtname());
+			JLabel locationL = new JLabel("Location: "+v.getLocation());
 			
 			rowPane.add(makeL);
 			rowPane.add(vlicenseL);
@@ -423,11 +423,11 @@ public class ClientInterface extends JFrame implements ActionListener {
 				delegate.home();
 			}
 		 });
-		JLabel confno = new JLabel("confirmation number: "+receipt.getConfNo());
-		JLabel vtype = new JLabel("vehicle type:"+receipt.getVehicleType());
-		JLabel location = new JLabel("location:"+receipt.getLocation());					
-		JLabel startL = new JLabel("start time: "+receipt.getstartTimestamp());
-		JLabel endL = new JLabel("end time: "+receipt.getendTimestamp());
+		JLabel confno = new JLabel("Confirmation Number: "+receipt.getConfNo());
+		JLabel vtype = new JLabel("Vehicle Type:"+receipt.getVehicleType());
+		JLabel location = new JLabel("Location:"+receipt.getLocation());					
+		JLabel startL = new JLabel("Start Time: "+receipt.getstartTimestamp());
+		JLabel endL = new JLabel("End Time: "+receipt.getendTimestamp());
 
 		contentPane.add(confno);
 		contentPane.add(vtype);
