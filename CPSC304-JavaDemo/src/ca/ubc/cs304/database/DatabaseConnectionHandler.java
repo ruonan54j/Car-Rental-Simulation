@@ -421,7 +421,7 @@ public class DatabaseConnectionHandler {
 		ArrayList<VehicleModel> vehicles = new ArrayList<VehicleModel>();
 
 		try {
-			String query = "SELECT v.* FROM Vehicles v, Rentals r WHERE r.beginTimestamp >= CURRENT_DATE AND r.vid = v.vid ORDER BY v.location, v.vtname";
+			String query = "SELECT v.* FROM Vehicles v, Rentals r WHERE TRUNC(r.beginTimestamp) = TRUNC(sysdate) AND r.vid = v.vid ORDER BY v.location, v.vtname";
 
 			PreparedStatement ps = connection.prepareStatement(query);
 
@@ -458,7 +458,7 @@ public class DatabaseConnectionHandler {
 		ArrayList<VehicleModel> vehicles = new ArrayList<VehicleModel>();
 
 		try {
-			String query = "SELECT v.* FROM Vehicles v, Rentals r WHERE r.beginTimestamp >= CURRENT_DATE AND r.vid = v.vid AND v.location = ? ORDER BY v.location, v.vtname";
+			String query = "SELECT v.* FROM Vehicles v, Rentals r WHERE TRUNC(r.beginTimestamp) = TRUNC(sysdate) AND r.vid = v.vid AND v.location = ? ORDER BY v.location, v.vtname";
 
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, branch);
@@ -496,7 +496,7 @@ public class DatabaseConnectionHandler {
 		ArrayList<Double> prices = new ArrayList<>();
 
 		try {
-			String query = "SELECT v.*, r.finalCost FROM Vehicles v, Rentals r WHERE r.returnTimestamp >= CURRENT_DATE AND r.vid = v.vid ORDER BY v.location, v.vtname";
+			String query = "SELECT v.*, r.finalCost FROM Vehicles v, Rentals r WHERE TRUNC(r.returnTimestamp) = TRUNC(sysdate) AND r.vid = v.vid ORDER BY v.location, v.vtname";
 
 			PreparedStatement ps = connection.prepareStatement(query);
 
@@ -535,7 +535,7 @@ public class DatabaseConnectionHandler {
 		ArrayList<Double> prices = new ArrayList<>();
 
 		try {
-			String query = "SELECT v.*, r.finalCost FROM Vehicles v, Rentals r WHERE r.returnTimestamp >= CURRENT_DATE AND r.vid = v.vid AND v.location = ? ORDER BY v.location, v.vtname";
+			String query = "SELECT v.*, r.finalCost FROM Vehicles v, Rentals r WHERE TRUNC(r.returnTimestamp) = TRUNC(sysdate) AND r.vid = v.vid AND v.location = ? ORDER BY v.location, v.vtname";
 
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, branch);
