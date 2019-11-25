@@ -69,7 +69,7 @@ public class DatabaseConnectionHandler {
 
 		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 		try {
-			String query = "SELECT v.* FROM Vehicles v WHERE v.status LIKE ?";
+			String query = "SELECT v.* FROM Vehicles v WHERE v.status = ?";
 			if (vtname != null){
 				query += " AND v.vtname = ?";
 			}
@@ -86,7 +86,7 @@ public class DatabaseConnectionHandler {
 
 			/* Insert queries dependent on which ones aren't null */
 			int argInd = 1;
-			ps.setString(argInd++, "%");
+			ps.setString(argInd++, "Available");
 
 			if (vtname != null)
 				ps.setString(argInd++, vtname);
@@ -203,9 +203,9 @@ public class DatabaseConnectionHandler {
 	If return value is null, no vehicles of the specified type were available at the location in the time frame
 	"now" should be retrieved from Instant.now()
 	*/
-	public RentalReceipt createRentalNoRes(String location, Instant now, String cardName, String cardNo, Instant expDate, String vtname, String dlicense, Instant startTimestamp, Instant endTimestamp){
+	public RentalReceipt createRentalNoRes(String location, Instant now, String cardName, String cardNo, Instant expDate, String vtname, String dlicense, Instant endTimestamp){
 
-		ReservationReceipt res = createReservation(vtname, location, dlicense, startTimestamp, endTimestamp, cardName, cardNo, expDate);
+		ReservationReceipt res = createReservation(vtname, location, dlicense, now, endTimestamp, cardName, cardNo, expDate);
 		if (res == null){
 			return null;
 		}
@@ -226,7 +226,6 @@ public class DatabaseConnectionHandler {
 			ResultSet rs = ps.executeQuery();
 			int vid;
 			String dlicense;
-			Instant startTimestamp;
 			Instant endTimestamp;
 			String cardName;
 			String cardNo;
@@ -234,7 +233,6 @@ public class DatabaseConnectionHandler {
 			if (rs.next()){ //Reservation info
 				vid = rs.getInt(2);
 				dlicense = rs.getString(3);
-				startTimestamp = rs.getTimestamp(4).toInstant();
 				endTimestamp = rs.getTimestamp(5).toInstant();
 				cardName = rs.getString(6);
 				cardNo = rs.getString(7);
@@ -302,6 +300,7 @@ public class DatabaseConnectionHandler {
 			connection.commit();
 			ps.close();
 
+			System.out.println("RENTAL SUCCESSFUL: starting: " + Timestamp.from(now) + " ON " + vid);
 			return new RentalReceipt(rid, confNo, startOdometer, cardName, expDate, cardNo, dlicense, vid, vehicleType, location, now, endTimestamp);
 
 		} catch (SQLException e) { //Invalid query
@@ -442,6 +441,7 @@ public class DatabaseConnectionHandler {
 			}
 			rs.close();
 			ps.close();
+			System.out.println("DAILY RENTAL REPORT SIZE: " + vehicles.size());
 			return new DailyRentalReport(vehicles);
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
