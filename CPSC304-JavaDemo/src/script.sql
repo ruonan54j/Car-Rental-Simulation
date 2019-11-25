@@ -10,7 +10,8 @@ create table VehicleTypes(
   features varchar2(20),
   hourlyRate number(10,2) not null,
   kiloRate number(10,2) not null,
-  kiloLimitPerHour number(10,2) not null);
+  kiloLimitPerHour number(10,2) not null,
+  tankRefillFee number(10,2) not null);
 
 
 create table Vehicles(
@@ -34,49 +35,58 @@ create table Customers(
   );
 
 create table Reservations(
-  confNo integer primary key,
+  confNo integer GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) primary key,
   vid integer,
   dlicense varchar(20),
   startTimestamp timestamp not null,
   endTimestamp timestamp not null,
   cardName varchar(20) not null,
   cardNo varchar(20) not null,
-  expDate timestamp not null, 
+  expDate timestamp not null,
   foreign key (vid) references Vehicles,
   foreign key (dlicense) references Customers(dlicense));
 
 create table Rentals(
-  rid integer primary key,
+  rid integer GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) primary key,
+  vid integer,
   confNo integer,
   startOdometer number(6,0) not null,
   beginTimestamp timestamp,
-  returnTimestamp timestamp not null,
+  returnTimestamp timestamp,
   endOdometer number(6,0),   
   fullTank integer,
   finalCost number(6,0),
- foreign key(confNo) references Reservations(confNo));
+  foreign key (vid) references Vehicles,
+  foreign key(confNo) references Reservations(confNo));
 
-insert into Customers values ('1233377','1233337','fay','12 Ave NW');
-insert into Customers values ('1244466','1231117','hed','123 A street NW');
-insert into Customers values ('1235557','1233367','sony','12 B street NW');
-insert into Customers values ('1266647','1235567','Roger','3 Ave SW');
-insert into Customers values ('1221117','1777767','kristy','1 street NE');
-insert into Customers values ('1233117','1234467','crystal','3 elmo street NW');
-insert into Customers values ('1111167','1226467','jered','13 bear street NE');
-
-
-insert into VehicleTypes values ('electric','fun',52.44,21.00, 80.00);
-insert into VehicleTypes values ('van','not fun',55.44,25.00, 50.00);
-insert into VehicleTypes values ('cruiser','fast',52.54,20.00, 75.00);
-insert into VehicleTypes values ('truck','big',58.00,22.00, 70.00);
-insert into VehicleTypes values ('hybrid','yaay',56.44,20.50, 60.00);
-insert into VehicleTypes values ('typeTest','test',38.00,23.00, 73.00);
-insert into VehicleTypes values ('typeTest2','loud',16.44,10.50, 65.00);
+insert into Customers values ('1233377','123-333-7321','Fay','12 Ave NW');
+insert into Customers values ('1244466','123-111-7341','Hed','123 A street NW');
+insert into Customers values ('1235557','123-336-7416','Sony','12 B street NW');
+insert into Customers values ('1266647','123-556-7431','Roger','3 Ave SW');
+insert into Customers values ('1221117','177-776-7512','Kristy','1 street NE');
+insert into Customers values ('1233117','123-446-7324','Crystal','3 elmo street NW');
+insert into Customers values ('1111167','122-646-7213','Jered','13 bear street NE');
+insert into Customers values ('123','123-456-7890','Bob','10 Hi Street');
 
 
-insert into Vehicles values (1,'plate1','make1','m1',12,'blue',12.23,'b','electric','vancouver');
-insert into Vehicles values (2,'plate2','make2','m2',02,'red',12.23,'f','truck','vancouver');
-insert into Vehicles values (3,'plate3','make1','m2',02,'red',12.23,'f','truck','vancouver');
-insert into Vehicles values (4,'plate4','make1','m3',12,'blue',12.23,'b','electric','vancouver');
-insert into Vehicles values (5,'plate5','make2','m5',02,'red',12.23,'f','truck','vancouver');
-insert into Vehicles values (6,'plate6','make1','m2',02,'red',12.23,'f','truck','vancouver');
+insert into VehicleTypes values ('Electric','fun', 5.44, 21.00, 80.00, 20.00);
+insert into VehicleTypes values ('Van','not fun', 5.44, 25.00, 50.00, 50.00);
+insert into VehicleTypes values ('Cruiser','fast', 2.54, 20.00, 75.00, 40.00);
+insert into VehicleTypes values ('Truck','big', 8.00, 2.00, 7.00, 50.00);
+insert into VehicleTypes values ('Hybrid','yaay', 6.44, 20.50, 60.00, 30.00);
+insert into VehicleTypes values ('TypeTest','test', 3.00, 23.00, 73.00, 20.00);
+insert into VehicleTypes values ('TypeTest2','loud', 1.44, 10.50, 65.00, 20.00);
+
+
+insert into Vehicles values (1,'plate1','make1','m1',12,'blue',12.23,'b','Electric','Vancouver');
+insert into Vehicles values (2,'plate2','make2','m2',02,'red',12.23,'f','Truck','Vancouver');
+insert into Vehicles values (3,'plate3','make1','m2',02,'red',12.23,'f','Truck','Vancouver');
+insert into Vehicles values (4,'plate4','make1','m3',12,'blue',12.23,'b','Electric','Vancouver');
+insert into Vehicles values (5,'plate5','make2','m5',02,'red',12.23,'f','Truck','Vancouver');
+insert into Vehicles values (6,'plate6','make1','m2',02,'red',12.23,'f','Truck','Vancouver');
+insert into Vehicles values (7,'plate7','make3','m2',02,'red',12.23,'f','Cruiser','Richmond');
+insert into Vehicles values (8,'plate7','make2','m2',02,'red',12.23,'f','Truck','Richmond');
+insert into Vehicles values (9,'plate7','make2','m2',02,'red',12.23,'f','Cruiser','Richmond');
+insert into Vehicles values (10,'plate7','make1','m2',02,'red',12.23,'f','Electric','Richmond');
+insert into Vehicles values (11,'plate7','make1','m2',02,'red',12.23,'f','Cruiser','Richmond');
+

@@ -83,13 +83,13 @@ public class GenericInterface extends JFrame{
 
 		// make the window visible
 		 this.setVisible(true);
-
-		// place the cursor in the text field for the username
-		carType.requestFocus();
 	}
 
 
 	public void openChoice(int id){
-        delegate.openChoice(id);
-    }
+		delegate.openChoice(id);
+		this.setVisible(false);
+	}
+	
+	
 }
