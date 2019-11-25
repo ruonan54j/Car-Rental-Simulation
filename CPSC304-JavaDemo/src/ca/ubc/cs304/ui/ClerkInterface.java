@@ -74,15 +74,17 @@ public class ClerkInterface extends JFrame{
 		
 		JButton rentButton = new JButton("Rent a Vehicle");
 		JButton returnButton = new JButton("Return a Vehicle");
-		JButton rentalReportButton = new JButton("Generate Daily Report- Car Rentals");
-		JButton returnReportButton = new JButton("Generate Daily Report- Car Returns");
+		JButton report1Button = new JButton("Generate Daily Report- Car Rentals");
+		JButton report2Button = new JButton("Generate Daily Report- Car Returns");
+
 		contentPane = new JPanel();
 		this.setContentPane(contentPane);
 	
 		contentPane.add(rentButton);
 		contentPane.add(returnButton);
-		contentPane.add(rentalReportButton);
-		contentPane.add(returnReportButton);
+		contentPane.add(report1Button);
+		contentPane.add(report2Button);
+
         
 		// set Box Layout 
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -100,16 +102,17 @@ public class ClerkInterface extends JFrame{
 			}
          });
 
-		 rentalReportButton.addActionListener(new ActionListener(){
+		report1Button.addActionListener(new ActionListener(){
+
 			public void actionPerformed(ActionEvent e){
                 openRentalReport();
 			}
 		 });
-		 returnReportButton.addActionListener(new ActionListener(){
+		 report2Button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-                openReturnReport();
+                openReport2();
 			}
-		 });
+         });
 
 		this.pack();
 		// center the frame
@@ -121,11 +124,12 @@ public class ClerkInterface extends JFrame{
 		 this.setVisible(true);
 	}
 	
-	public void openRentalReport(){
-
+	public void openReport(){
+		
 		contentPane.removeAll();
 		JPanel rowPane0 = new JPanel();
 		rowPane0.setLayout(new FlowLayout(FlowLayout.CENTER));
+	
 
 		JButton homeButton = new JButton("Home");
 		rowPane0.add(homeButton);
@@ -138,10 +142,11 @@ public class ClerkInterface extends JFrame{
 			}
 		 });
 
-
+		 
 		DailyRentalReport report = delegate.getDailyRentals();
-
+		
 		JLabel totalReturns = new JLabel("Total Rentals: " + report.totalVehicles);
+	
 
 		JPanel row = new JPanel();
 		row.setLayout(new FlowLayout(FlowLayout.LEADING));
@@ -159,7 +164,6 @@ public class ClerkInterface extends JFrame{
 			rowPane.add(detailBtn);
 			contentPane.add(rowPane);
 			contentPane.add(rowPane2);
-
 
 			detailBtn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e){
@@ -179,14 +183,14 @@ public class ClerkInterface extends JFrame{
 
 		// make the window visible
 		 this.setVisible(true);
-
 	}
 
-	public void openReturnReport(){
+	public void openReport2(){
+		
 		contentPane.removeAll();
 		JPanel rowPane0 = new JPanel();
 		rowPane0.setLayout(new FlowLayout(FlowLayout.CENTER));
-
+	
 		JButton homeButton = new JButton("Home");
 		rowPane0.add(homeButton);
 		contentPane.add(rowPane0);
@@ -198,8 +202,9 @@ public class ClerkInterface extends JFrame{
 			}
 		 });
 
+		 
 		DailyReturnReport report = delegate.getDailyReturns();
-
+		
 		JLabel totalReturns = new JLabel("Total Rentals: " + report.totalVehicles);
 		JLabel totalRev = new JLabel("Total Revenue: " + report.totalRevenue);
 		JPanel row = new JPanel();
@@ -208,7 +213,7 @@ public class ClerkInterface extends JFrame{
 		row.add(totalRev);
 		contentPane.add(row);
 		contentPane.add(row);
-
+	
 		for (Map.Entry<String,DailyReturnReportBranch> entry : report.branchReports.entrySet()){  
 			//create entry with branch and rental detail
 			JButton detailBtn = new JButton("View Detail");
@@ -219,7 +224,7 @@ public class ClerkInterface extends JFrame{
 			rowPane.add(detailBtn);
 			contentPane.add(rowPane);
 			contentPane.add(rowPane2);
-
+			
 			detailBtn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e){
 					//display details for branch
@@ -238,10 +243,11 @@ public class ClerkInterface extends JFrame{
 
 		// make the window visible
 		 this.setVisible(true);
+
 	}
 
 	public void openReturnBranch(DailyReturnReportBranch dailyReturnBranch, JPanel rowPane){
-
+	
 		for (Map.Entry<String,Integer> sEntry : dailyReturnBranch.numVehicles.entrySet()){
 			rowPane.setLayout(new FlowLayout(FlowLayout.LEADING));
 			System.out.println(sEntry.getKey());
@@ -261,7 +267,7 @@ public class ClerkInterface extends JFrame{
 		this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
 		this.setVisible(true);
 	}
-
+	
 	public void openRentalsBranch(DailyRentalReportBranch dailyRentalsBranch, JPanel rowPane){
 		System.out.println( dailyRentalsBranch);
 		for (Map.Entry<String,Integer> sEntry : dailyRentalsBranch.numVehicles.entrySet()){
@@ -277,7 +283,6 @@ public class ClerkInterface extends JFrame{
 		this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
 		this.setVisible(true);
 	}
-
 	//open rent page
 	public void openRent(){
 		contentPane.removeAll();
@@ -351,18 +356,14 @@ public class ClerkInterface extends JFrame{
 		//add action to btn
 		rentBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				try {
-					RentalReceipt receipt = delegate.createRentalWithRes(Integer.valueOf(confField.getText()), Instant.now());
-					if (receipt == null){
-						JOptionPane.showMessageDialog(new JFrame(), "Confirmation number not found"); //Popup error
-						openWithRes();
-					}
-					else{
-						openRentalReceipt(receipt);
-					}
-				} catch (Exception err) {
-					JOptionPane.showMessageDialog(new JFrame(), "Input text not properly formatted"); //Popup error
-					openWithRes();
+				RentalReceipt receipt = delegate.createRentalWithRes(Integer.valueOf(confField.getText()), Instant.now());
+				//Currently the GUI freezes if receipt is null, even with this if check
+				if (receipt != null){
+					openRentalReceipt(receipt);
+				}
+				else{
+					System.out.println("CONF NUMBER INVALID");
+
 				}
 			}
 		 });
@@ -469,7 +470,8 @@ public class ClerkInterface extends JFrame{
 					dateExp= new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(expDate.getText()));
 					endInstant = dateEnd.toInstant();
 					expInstant = dateExp.toInstant();
-					RentalReceipt receipt = delegate.createRentalNoRes(String.valueOf(location.getText()), Instant.now(), String.valueOf(cardName.getText()), String.valueOf(cardNo.getText()), expInstant, String.valueOf(vtname.getText()), String.valueOf(dlicense.getText()), endInstant);
+					RentalReceipt receipt = delegate.createRentalNoRes(String.valueOf(location.getText()), startInstant, String.valueOf(cardName.getText()), String.valueOf(cardNo.getText()), expInstant, String.valueOf(vtname.getText()), String.valueOf(dlicense.getText()), startInstant, endInstant);
+
 					if (receipt != null){
 						openRentalReceipt(receipt);
 					}
@@ -544,23 +546,12 @@ public class ClerkInterface extends JFrame{
 
 		returnBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				contentPane.removeAll();
-				try{
-					int parsedRid = Integer.valueOf(rid.getText());
-					double parsedEndOdometer = Double.valueOf(endOdometer.getText());
-					boolean parsedFullTank = Boolean.valueOf(fullTank.getText());
-					ReturnReceipt receipt = delegate.returnVehicle(parsedRid, Instant.now(), parsedEndOdometer, parsedFullTank); //This throws exception if receipt is null
-					if (receipt == null){
-						JOptionPane.showMessageDialog(new JFrame(), "Rental id does not exist"); //Popup error
-						openReturn();
-					}
-					else{
-						openReturnReceipt(receipt);
-					}
-				} catch (Exception err){
-					JOptionPane.showMessageDialog(new JFrame(), "Input text not properly formatted"); //Popup error
-					openReturn();
-				}
+				contentPane.removeAll();				
+				ReturnReceipt receipt = delegate.returnVehicle(Integer.valueOf(rid.getText()), Instant.now(), Double.valueOf(endOdometer.getText()), Boolean.valueOf(fullTank.getText()));
+				System.out.println(Boolean.valueOf(fullTank.getText()));
+				openReturnReceipt(receipt);
+				
+
 			}
 		 });
 		
