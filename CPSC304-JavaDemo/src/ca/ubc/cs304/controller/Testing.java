@@ -89,8 +89,8 @@ public class Testing implements LoginWindowDelegate {
 		System.out.println("Rent receipt 3 null?: " + (rentReceipt3 == null));
 
 		// Test return..
-		ReturnReceipt returnReceipt = t.dbHandler.returnVehicle(rentReceipt.getRid(), Instant.now(), rentReceipt.getStartOdometer() + 500, true);
-		System.out.println("Return conf no: " + returnReceipt.getConfNo());
+		ReturnReceipt returnReceipt = t.dbHandler.returnVehicle(1, Instant.now(),  500, true);
+		System.out.println("Return conf noggggg: " + returnReceipt.getConfNo());
 		System.out.println("Return distance total: " + returnReceipt.getDistTotal());
 		System.out.println("Return hourly total: " + returnReceipt.getHourlyTotal());
 		System.out.println("Return final total: " + returnReceipt.getFinalTotal());

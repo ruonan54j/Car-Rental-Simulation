@@ -561,7 +561,7 @@ public class ClerkInterface extends JFrame{
 			public void actionPerformed(ActionEvent e){
 				contentPane.removeAll();
 				
-				ReturnReceipt receipt = delegate.returnVehicle(Integer.valueOf(rid.getText()), Instant.now(), Double.valueOf(endOdometer.getText()), Boolean.valueOf(fullTank.getText()));
+				ReturnReceipt receipt = delegate.returnVehicle(Integer.valueOf(rid.getText()), Instant.now(), 12.3, Boolean.valueOf(fullTank.getText()));
 				System.out.println(Boolean.valueOf(fullTank.getText()));
 				openReturnReceipt(receipt);
 				

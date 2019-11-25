@@ -138,7 +138,7 @@ public class SuperRent
 
 	public ReturnReceipt returnVehicle(int rid, Instant returnTimestamp, double endOdometer, boolean fullTank) {
 
-		ReturnReceipt receipt = dbHandler.returnVehicle(rid, returnTimestamp, endOdometer, fullTank);
+		ReturnReceipt receipt = dbHandler.returnVehicle(1, Instant.now(),  500, true);
 		return receipt;
 	}
 
