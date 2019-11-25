@@ -549,9 +549,13 @@ public class ClerkInterface extends JFrame{
 				contentPane.removeAll();				
 				ReturnReceipt receipt = delegate.returnVehicle(Integer.valueOf(rid.getText()), Instant.now(), Double.valueOf(endOdometer.getText()), Boolean.valueOf(fullTank.getText()));
 				System.out.println(Boolean.valueOf(fullTank.getText()));
-				openReturnReceipt(receipt);
-				
-
+				if (receipt != null){
+					openReturnReceipt(receipt);
+				}
+				else{
+					JOptionPane.showMessageDialog(new JFrame(), "RID does not exist"); //Popup error
+					openReturn();
+				}
 			}
 		 });
 		

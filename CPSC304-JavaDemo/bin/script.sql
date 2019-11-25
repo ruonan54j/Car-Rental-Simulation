@@ -50,12 +50,12 @@ create table Rentals(
   rid integer GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) primary key,
   vid integer,
   confNo integer,
-  startOdometer number(6,2) not null,
+  startOdometer number(12,2) not null,
   beginTimestamp timestamp,
   returnTimestamp timestamp,
-  endOdometer number(6,2),   
+  endOdometer number(12,2),   
   fullTank integer,
-  finalCost number(6,2),
+  finalCost number(12,2),
   foreign key (vid) references Vehicles,
   foreign key(confNo) references Reservations(confNo));
 
