@@ -16,12 +16,15 @@ import java.time.Duration;
 import java.util.*;
 import ca.ubc.cs304.model.BranchModel;
 import ca.ubc.cs304.model.CustomerModel;
+import ca.ubc.cs304.model.DailyRentalReport;
+import ca.ubc.cs304.model.DailyRentalReportBranch;
+import ca.ubc.cs304.model.DailyReturnReport;
+import ca.ubc.cs304.model.DailyReturnReportBranch;
 import ca.ubc.cs304.model.RentalModel;
 import ca.ubc.cs304.model.RentalReceipt;
 import ca.ubc.cs304.model.ReservationModel;
 import ca.ubc.cs304.model.ReservationReceipt;
 import ca.ubc.cs304.model.VehicleModel;
-import ca.ubc.cs304.model.VehicleReturnWithPrice;
 import ca.ubc.cs304.model.ReturnReceipt;
 
 /**
@@ -65,7 +68,6 @@ public class DatabaseConnectionHandler {
 	public VehicleModel[] getVehicles(String vtname, String location, Instant startTimestamp, Instant endTimestamp){
 
 		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
-		Boolean first = true;
 		try {
 			String query = "SELECT v.* FROM Vehicles v WHERE v.status LIKE ?";
 			if (vtname != null){
@@ -300,7 +302,7 @@ public class DatabaseConnectionHandler {
 			connection.commit();
 			ps.close();
 
-			return new RentalReceipt(rid, confNo, startOdometer, cardName, expDate, cardNo, dlicense, vid, vehicleType, location, startTimestamp, endTimestamp);
+			return new RentalReceipt(rid, confNo, startOdometer, cardName, expDate, cardNo, dlicense, vid, vehicleType, location, now, endTimestamp);
 
 		} catch (SQLException e) { //Invalid query
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
@@ -413,11 +415,11 @@ public class DatabaseConnectionHandler {
 	}
 
 	/*
-	Daily rentals, we assume that some outside func takes care of counting # of rentals/branch & total rentals
-	The list of Vehicles themselves, however, are grouped by location first, and if location is same, vehicle type
+	Daily rentals (for the current day)
+	Refer to "DailyRentalReport.java" for how to retrieve the desired values
 	*/
-	public VehicleModel[] getDailyRentals() {
-		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
+	public DailyRentalReport getDailyRentals() {
+		ArrayList<VehicleModel> vehicles = new ArrayList<VehicleModel>();
 
 		try {
 			String query = "SELECT v.* FROM Vehicles v, Rentals r WHERE r.beginTimestamp >= CURRENT_DATE AND r.vid = v.vid ORDER BY v.location, v.vtname";
@@ -436,11 +438,11 @@ public class DatabaseConnectionHandler {
 													rs.getString("status"),
 													rs.getString("vtname"),
 													rs.getString("location"));
-				result.add(model);
+				vehicles.add(model);
 			}
 			rs.close();
 			ps.close();
-			return result.toArray(new VehicleModel[result.size()]);
+			return new DailyRentalReport(vehicles);
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
@@ -449,11 +451,11 @@ public class DatabaseConnectionHandler {
 	}
 
 	/*
-	Daily rentals for branch, we assume that some outside func takes care of counting # of rentals/branch & total rentals
-	The list of Vehicles themselves, however, are grouped by location first, and if location is same, vehicle type
+	Daily rentals for a branch(for the current day)
+	Refer to "DailyRentalReportBranch.java" for how to retrieve the desired values
 	*/
-	public VehicleModel[] getDailyRentalsBranch(String branch) {
-		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
+	public DailyRentalReportBranch getDailyRentalsBranch(String branch) {
+		ArrayList<VehicleModel> vehicles = new ArrayList<VehicleModel>();
 
 		try {
 			String query = "SELECT v.* FROM Vehicles v, Rentals r WHERE r.beginTimestamp >= CURRENT_DATE AND r.vid = v.vid AND v.location = ? ORDER BY v.location, v.vtname";
@@ -473,11 +475,11 @@ public class DatabaseConnectionHandler {
 													rs.getString("status"),
 													rs.getString("vtname"),
 													rs.getString("location"));
-				result.add(model);
+				vehicles.add(model);
 			}
 			rs.close();
 			ps.close();
-			return result.toArray(new VehicleModel[result.size()]);
+			return new DailyRentalReportBranch(vehicles, branch);
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
@@ -486,11 +488,12 @@ public class DatabaseConnectionHandler {
 	}
 
 	/*
-	Daily returns, we assume that some outside func takes care of counting # of rentals/branch & total rentals AND grouping the cost
-	The list of Vehicles themselves, however, are grouped by location first, and if location is same, vehicle type (along with each cost)
+	Daily returns (for the current day)
+	Refer to "DailyReturnReport.java" for how to retrieve the desired values
 	*/
-	public VehicleReturnWithPrice[] getDailyReturns() {
-		ArrayList<VehicleReturnWithPrice> result = new ArrayList<>();
+	public DailyReturnReport getDailyReturns() {
+		ArrayList<VehicleModel> vehicles = new ArrayList<>();
+		ArrayList<Double> prices = new ArrayList<>();
 
 		try {
 			String query = "SELECT v.*, r.finalCost FROM Vehicles v, Rentals r WHERE r.returnTimestamp >= CURRENT_DATE AND r.vid = v.vid ORDER BY v.location, v.vtname";
@@ -510,11 +513,12 @@ public class DatabaseConnectionHandler {
 													rs.getString("vtname"),
 													rs.getString("location"));
 				double price = rs.getDouble("finalCost");
-				result.add(new VehicleReturnWithPrice(vehicle, price));
+				vehicles.add(vehicle);
+				prices.add(price);
 			}
 			rs.close();
 			ps.close();
-			return result.toArray(new VehicleReturnWithPrice[result.size()]);
+			return new DailyReturnReport(vehicles, prices);
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
@@ -523,10 +527,12 @@ public class DatabaseConnectionHandler {
 	}
 
 	/*
-	Daily returns for branch
+	Daily returns for a branch (for the current day)
+	Refer to "DailyReturnReportBranch.java" for how to retrieve the desired values
 	*/
-	public VehicleReturnWithPrice[] getDailyReturnsBranch(String branch) {
-		ArrayList<VehicleReturnWithPrice> result = new ArrayList<>();
+	public DailyReturnReportBranch getDailyReturnsBranch(String branch) {
+		ArrayList<VehicleModel> vehicles = new ArrayList<>();
+		ArrayList<Double> prices = new ArrayList<>();
 
 		try {
 			String query = "SELECT v.*, r.finalCost FROM Vehicles v, Rentals r WHERE r.returnTimestamp >= CURRENT_DATE AND r.vid = v.vid AND v.location = ? ORDER BY v.location, v.vtname";
@@ -547,11 +553,12 @@ public class DatabaseConnectionHandler {
 													rs.getString("vtname"),
 													rs.getString("location"));
 				double price = rs.getDouble("finalCost");
-				result.add(new VehicleReturnWithPrice(vehicle, price));
+				vehicles.add(vehicle);
+				prices.add(price);
 			}
 			rs.close();
 			ps.close();
-			return result.toArray(new VehicleReturnWithPrice[result.size()]);
+			return new DailyReturnReportBranch(vehicles, prices, branch);
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();

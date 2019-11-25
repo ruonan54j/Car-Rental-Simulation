@@ -153,6 +153,7 @@ public class ClerkInterface extends JFrame{
 		// make the window visible
 		 this.setVisible(true);
 	}
+
 	//page: rent with reservation
 	public void openWithRes(){
 		contentPane.removeAll();
@@ -186,11 +187,18 @@ public class ClerkInterface extends JFrame{
 		rentBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				RentalReceipt receipt = delegate.createRentalWithRes(Integer.valueOf(confField.getText()), Instant.now());
-				openReceipt(receipt);
+				//TODO: Add if receipt is null, give error that confno is invalid
+				//Currently the GUI freezes if receipt is null, even with this if check
+				if (receipt != null){
+					openRentalReceipt(receipt);
+				}
+				else{
+					System.out.println("CONF NUMBER INVALID");
+				}
 			}
 		 });
 
-		 this.pack();
+		this.pack();
 		// center the frame
 		Dimension d = this.getToolkit().getScreenSize();
 		Rectangle r = this.getBounds();
@@ -199,6 +207,7 @@ public class ClerkInterface extends JFrame{
 		// make the window visible
 		 this.setVisible(true);
 	}
+
 	//page: rent without reservation
 	public void openNoRes(){
 		contentPane.removeAll();
@@ -301,7 +310,14 @@ public class ClerkInterface extends JFrame{
 					endInstant = dateEnd.toInstant();
 					expInstant = dateExp.toInstant();
 					RentalReceipt receipt = delegate.createRentalNoRes(String.valueOf(location.getText()), Instant.now(), String.valueOf(cardName.getText()), String.valueOf(cardNo.getText()), expInstant, String.valueOf(vtname.getText()), String.valueOf(dlicense.getText()), startInstant, endInstant);
-					openReceipt(receipt);
+					//TODO: add no matching vehicle found error if receipt is null
+					if (receipt != null){
+						openRentalReceipt(receipt);
+					}
+					else{
+						System.out.println("NO MATCHING VEHICLES FOUND");
+					}
+
 				} catch (ParseException err) {
 				
 				}
@@ -379,7 +395,7 @@ public class ClerkInterface extends JFrame{
 			public void actionPerformed(ActionEvent e){
 				contentPane.removeAll();
 	
-				ReturnReceipt receipt = returnVehicle(Integer.valueOf(rid.getText()), Instant.now(),String.valueOf(endOdometer.getText()), Boolean.valueOf(fullTank.getText()));
+				ReturnReceipt receipt = delegate.returnVehicle(Integer.valueOf(rid.getText()), Instant.now(), Double.valueOf(endOdometer.getText()), Boolean.valueOf(fullTank.getText()));
 				System.out.println(Boolean.valueOf(fullTank.getText()));
 				openReturnReceipt(receipt);
 				
@@ -395,15 +411,7 @@ public class ClerkInterface extends JFrame{
 		// make the window visible
 		 this.setVisible(true);
 	}
-
-	protected ReturnReceipt returnVehicle(Integer valueOf, Instant returnInstant, String valueOf2, Boolean valueOf3) {
-		return null;
-	}
-
-	protected ReturnReceipt returnVehicle(String valueOf, Instant returnInstant, String valueOf2, Boolean valueOf3) {
-		return null;
-	}
-
+	
 	public void openReturnReceipt(ReturnReceipt receipt){
 		JPanel rowPane0 = new JPanel();
 		rowPane0.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -418,14 +426,14 @@ public class ClerkInterface extends JFrame{
 				delegate.home();
 			}
 		 });
-		JLabel confno = new JLabel("confirmation number: "+receipt.getConfNo());
-		JLabel hourlyRate = new JLabel("hourly rate:"+receipt.getHourlyRate());					
-		JLabel hoursRented = new JLabel("hours rented: "+receipt.getHoursRented());
-		JLabel hourlyTotal = new JLabel("hourly total: "+receipt.getHourlyTotal());
-		JLabel kiloRate = new JLabel("kilo rate: "+receipt.getKiloRate());
-		JLabel gasTotal = new JLabel("total gas: "+receipt.getGasTotal());
-		JLabel distTotal = new JLabel("total distance: "+receipt.getDistTotal());
-		JLabel finalTotal = new JLabel("Final cost: "+receipt.getFinalTotal());
+		JLabel confno = new JLabel("Confirmation Number: "+receipt.getConfNo());
+		JLabel hourlyRate = new JLabel("Hourly Rate:"+receipt.getHourlyRate());					
+		JLabel hoursRented = new JLabel("Hours Rented: "+receipt.getHoursRented());
+		JLabel hourlyTotal = new JLabel("Hourly Subtotal: "+receipt.getHourlyTotal());
+		JLabel kiloRate = new JLabel("Kilo Rate: "+receipt.getKiloRate());
+		JLabel gasTotal = new JLabel("Gas Subtotal: "+receipt.getGasTotal());
+		JLabel distTotal = new JLabel("Distance Subtotal: "+receipt.getDistTotal());
+		JLabel finalTotal = new JLabel("Final Cost: "+receipt.getFinalTotal());
 
 		contentPane.add(confno);
 		contentPane.add(hourlyRate);
@@ -445,7 +453,7 @@ public class ClerkInterface extends JFrame{
 		 this.setVisible(true);
 	}
 
-	public void openReceipt(RentalReceipt receipt) {
+	public void openRentalReceipt(RentalReceipt receipt) {
 		JPanel rowPane0 = new JPanel();
 		rowPane0.setLayout(new FlowLayout(FlowLayout.CENTER));
 	
@@ -459,13 +467,13 @@ public class ClerkInterface extends JFrame{
 				delegate.home();
 			}
 		 });
-		JLabel rid = new JLabel("rental id: "+receipt.getRid());
-		JLabel confno = new JLabel("confirmation number: "+receipt.getConfNo());
-		JLabel location = new JLabel("location:"+receipt.getLocation());					
-		JLabel vtype = new JLabel("end time: "+receipt.getVehicleType());
-		JLabel start = new JLabel("start time: "+receipt.getStartTimestamp());
-		JLabel license= new JLabel("license: "+receipt.getDlicense());
-		JLabel odometer = new JLabel("odometer: "+receipt.getStartOdometer());
+		JLabel rid = new JLabel("Rental ID: "+receipt.getRid());
+		JLabel confno = new JLabel("Reservation Confirmation Number: "+receipt.getConfNo());
+		JLabel location = new JLabel("Location: "+receipt.getLocation());					
+		JLabel vtype = new JLabel("Vehicle Type: "+receipt.getVehicleType());
+		JLabel start = new JLabel("Start Time: "+receipt.getStartTimestamp());
+		JLabel license= new JLabel("License: "+receipt.getDlicense()); //THIS RETURNS NULL
+		JLabel odometer = new JLabel("Odometer: "+receipt.getStartOdometer() + " KM");
 
 		contentPane.add(rid);
 		contentPane.add(confno);
